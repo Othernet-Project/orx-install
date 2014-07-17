@@ -20,10 +20,9 @@
 
 set -e
 
-# Constants values
+# Constants
 RELEASE=0.1a3
 NAME=librarian
-UID=$(id -u)
 ROOT=0
 OK=0
 
@@ -76,7 +75,7 @@ if [[ $UID != $ROOT ]]; then
 fi
 
 # Checks internet connection. 0 means OK.
-if [[ $(checknet "$REPO") != $OK ]]; then
+if [[ $(checknet "http://example.com/") != $OK ]]; then
     warn_and_die "Internet connection is required."
 fi
 
@@ -86,7 +85,7 @@ if [[ $(checknet "127.0.0.1:80") == $OK ]]; then
 fi
 
 # Add jessie repository
-if [[ ! grep jessie /etc/apt/sources.list ]]; then
+if ! [[ $(grep jessie /etc/apt/sources.list) ]]; then
     # Adds Raspbian's jessie repositories to sources.list
     cat >> /etc/apt/sources.list <<END
 # Added by install-librarian.sh
@@ -100,17 +99,16 @@ apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get -y --force-yes install python3.4 \
     python3.4-dev python3-setuptools
 
-# Install pip
-$EI pip
-
 # Obtain and unpack the Librarian source
+rm "$TMPDIR/$TARBALL" || true # Make sure there aren't any old ones
 $WGET --directory-prefix "$TMPDIR" "${TARS}${TARBALL}"
 $UNPACK "$TMPDIR/$TARBALL" -C /opt 
 rm "$SRCDIR" || true # For some reason `ln -f` doesn't work, so we remove first
 ln -s "${SRCDIR}-${RELEASE}" "$SRCDIR"
-rm "$TARBALL" # Remove tarball, since it's no longer needed
+rm "$TMPDIR/$TARBALL" # Remove tarball, since it's no longer needed
 
 # Install python dependencies globally
+$EI pip
 $PIP install -r "$SRCDIR/conf/requirements.txt"
 
 # Create paths necessary for the software to run
@@ -126,7 +124,7 @@ stop on sopping networking
 respawn
 
 script
-PYTHONPATH=$SRCDIR python3 "$SRCDIR/$NAME/app.py
+PYTHONPATH=$SRCDIR python3 "$SRCDIR/$NAME/app.py"
 end script
 EOF
 
