@@ -133,4 +133,6 @@ PYTHONPATH=$SRCDIR python3 "$SRCDIR/$NAME/app.py"
 end script
 EOF
 
+service $NAME start
+
 touch "$LOCK"
