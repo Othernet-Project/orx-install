@@ -34,7 +34,7 @@ SRCDIR="/opt/$NAME"
 SPOOLDIR=/var/spool/downloads/content
 SRVDIR=/srv/zipballs
 TMPDIR=/tmp
-LOCK=/var/lock/
+LOCK=/run/lock/orx-setup.lock
 
 # Command aliases
 #
@@ -74,6 +74,11 @@ if [[ $UID != $ROOT ]]; then
     warn_and_die "Please run this script as root."
 fi
 
+# Check if there's a lock file
+if [[ -f "$LOCK" ]]; then
+    warn_and_die "Already set up. Remove lock file '$LOCK' to reinstall."
+fi
+
 # Checks internet connection. 0 means OK.
 if [[ $(checknet "http://example.com/") != $OK ]]; then
     warn_and_die "Internet connection is required."
@@ -81,7 +86,7 @@ fi
 
 # Check if port 80 is taken
 if [[ $(checknet "127.0.0.1:80") == $OK ]]; then
-    warn_and_die "Port 80 is currently taken. Free it and try again."
+    warn_and_die "Port 80 is taken. Disable the XBMC webserver and try again."
 fi
 
 # Add jessie repository
@@ -128,3 +133,4 @@ PYTHONPATH=$SRCDIR python3 "$SRCDIR/$NAME/app.py"
 end script
 EOF
 
+touch "$LOCK"
