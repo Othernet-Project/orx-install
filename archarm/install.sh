@@ -119,7 +119,7 @@ fi
 
 echo -n "Installing packages... "
 do_or_fail $PACMAN -Sqy
-do_or_fail $PACMAN -Sq --needed xbmc-rbp python python-pip
+do_or_fail $PACMAN -Sq --needed xbmc-rbp python python-pip polkit
 echo "DONE"
 
 # Obtain and unpack the Librarian source
@@ -168,6 +168,25 @@ WantedBy=multi-user.target
 EOF
 echo "DONE"
 
+# Configure PolicyKit to allow shutdown/reboot actions
+# https://github.com/chaosdorf/archlinux-xbmc/blob/master/releng/root-image/etc/polkit-1/rules.d/10-xbmc.rules
+echo -n "Configuring PolicyKit rules... "
+cat > "/etc/polkit-1/rules.d/10-xbmc.rules" <<EOF
+polkit.addRule(function(action, subject) {
+    if(action.id.match("org.freedesktop.login1.") && subject.isInGroup("power")) {
+        return polkit.Result.YES;
+    }
+});
+
+polkit.addRule(function(action, subject) {
+    if (action.id.indexOf("org.freedesktop.udisks") == 0 && subject.isInGroup("storage")) {
+        return polkit.Result.YES;
+    }
+});
+EOF
+echo "DONE"
+
+# Configure system services
 echo -n "Configuring system services... "
 do_or_fail systemctl daemon-reload
 if ! [[ $(systemctl is-enabled $NAME | grep "enabled") ]]; then
