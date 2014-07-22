@@ -259,6 +259,8 @@ After=network.target
 
 [Service]
 ExecStart=/usr/bin/dnsspoof -i %i -f "$DNSCFG"
+RestartSec=10
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
