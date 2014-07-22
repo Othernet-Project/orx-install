@@ -124,8 +124,8 @@ $MKD "$SRVDIR"
 cat > "/etc/init/${NAME}.conf" <<EOF
 description "Outernet Librarian v$RELEASE"
 
-start on started networking
-stop on sopping networking
+start on custom-network-done
+stop on shutdown
 respawn
 
 script
