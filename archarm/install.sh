@@ -77,7 +77,7 @@ warn_and_die() {
 # Echoes "FAIL" and exits
 #
 fail() {
-    echo "FAILED"
+    echo "FAILED (see '$LOG' for details)"
     exit 1
 }
 
