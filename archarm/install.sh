@@ -185,3 +185,4 @@ echo "DONE"
 
 touch "$LOCK"
 
+echo "Install logs can be found in '$LOG'."
