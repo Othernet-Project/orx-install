@@ -114,7 +114,7 @@ fi
 
 # Check if port 80 is taken
 if [[ $(checknet "127.0.0.1:80") == $OK ]]; then
-    warn_and_die "Port 80 is taken. Disable the XBMC webserver and try again."
+    warn_and_die "Port 80 is taken. Disable the XBMC webserver or stop $NAME."
 fi
 
 echo -n "Installing packages... "
