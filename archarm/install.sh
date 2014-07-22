@@ -174,7 +174,7 @@ if ! [[ $(systemctl is-enabled $NAME | grep "enabled") ]]; then
     do_or_fail systemctl enable librarian
 fi
 if [[ $(systemctl status $NAME | grep "Active:" | grep "inactive") ]]; then
-    do_or_fail start librarian
+    do_or_fail systemctl start librarian
 else
     do_or_fail systemctl restart librarian
 fi
