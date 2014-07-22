@@ -166,10 +166,10 @@ echo "OK"
 # Configure networking
 echo -n "Configuring $WLAN interface... "
 cat > "$NETCFG" <<EOF
-address=10.0.0.1
-netmask=24
-broadcast=10.0.0.255
-gateway=10.0.0.1
+address=$IPADDR
+netmask=$NETMASKB
+broadcast=${SUBNET}.255
+gateway=$IPADDR
 EOF
 cat > "$NETSRV" <<EOF
 [Unit]
@@ -203,7 +203,7 @@ echo "DONE"
 echo -n "Configuring hotspot... "
 cat > "$APCFG" <<EOF
 interface=$WLAN
-driver=nl80211
+driver=$HOSTAPDRV
 ssid=$SSID
 hw_mode=$MODE
 channel=$CHANNEL
