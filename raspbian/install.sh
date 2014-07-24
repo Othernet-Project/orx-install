@@ -291,24 +291,27 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 PYTHONPATH="$SRCDIR"
 SRCDIR="$SRCDIR"
 LOGFILE=/var/log/${NAME}.log
-PIDFILE=/run/${NAME}.pid
 USER=root
+PYTHON="$PYTHON"
 SCRIPT="\$SRCDIR/$NAME/app.py"
-STERM=TERM
 
-# Load init settings
+# Load init settings and LSB functions
 . /lib/init/vars.sh
+. /lib/lsb/init-functions
 
 #
 # Function to check if process is running
 #
 is_running() {
-    pid=\$(cat "\$PIDFILE")
-    # Check if PID in pid file is actually active
-    if ps -p \$pid > /dev/null; then
-        return 0
-    fi
-    return 1
+    ps ax | grep "\$PYTHON \$SCRIPT" | grep -v grep > /dev/null
+    return \$?
+}
+
+#
+# Function to get process ID(s) of running processes
+#
+pids() {
+    ps ax | grep "\$PYTHON \$SCRIPT" | grep -v grep | awk '{print \$1;}'
 }
 
 #
@@ -319,22 +322,19 @@ do_start() {
     #   0 if daemon has been started
     #   1 if daemon was already started
     #   2 if daemon could not be started
-    if [ -f "\$PIDFILE" ]; then
-        is_running
-        case "\$?" in
-            0) return 1 ;;
-            1) rm -f "\$PIDFILE" ;;
-        esac
-    fi
-    PYTHONPATH="\$SRCDIR" /usr/bin/python3 "\$SCRIPT" > "\$LOGFILE" 2>&1 &
-    pid="\$!"
+    is_running
     case "\$?" in
         0)
-            echo "\$pid" > "\$PIDFILE"
-            return 0
+            return 1
             ;;
         *)
-            return 2
+            PYTHONPATH="\$SRCDIR" \$PYTHON "\$SCRIPT" >> \$LOGFILE 2>&1 &
+            if [ "\$?" != 0 ]; then
+                # Failed to start
+                return 2
+            fi
+            sleep 30
+            return 0
             ;;
     esac
 }
@@ -347,41 +347,57 @@ do_stop() {
     #   0 if daemon has been stopped
     #   1 if daemon was already stopped
     #   2 if daemon could not be stopped
-    if ! [ -f "\$PIDFILE" ]; then
-        return 1
-    fi
     is_running
     case "\$?" in
         0)
-            pid=\$(cat "\$PIDFILE")
-            kill -s \$STERM "\$pid" || return 2
+            for pid in \$(pids); do
+                kill \$pid || return 2
+            done
+            return 0
             ;;
-        1) 
-            rm -f "\$PIDFILE" 
+        *) 
+            return 1
             ;;
     esac
-    return 0
 }
 
 case "\$1" in
     start)
-        [ "\$VERBOSE" != no ] && log_daemon_msg "Starting \$DESC" "\$NAME"
+        log_daemon_msg "Starting \$DESC" "\$NAME"
         do_start
         case "\$?" in
-            0|1) [ "\$VERBOSE" != no ] && log_end_msg 0 ;;
-            2) [ "\$VERBOSE" != no ] && log_end_msg 1 ;;
+            0|1) log_end_msg 0 ;;
+            2) log_end_msg 1 ;;
         esac
         ;;
     stop)
-        [ "\$VERBOSE" != no ] && log_daemon_msg "Stopping \$DESC" "\$NAME"
+        log_daemon_msg "Stopping \$DESC" "\$NAME"
         do_stop
         case "\$?" in
-            0|1) [ "\$VERBOSE" != no ] && log_end_msg 0 ;;
-            2) [ "\$VERBOSE" != no ] && log_end_msg 1 ;;
+            0|1) log_end_msg 0 ;;
+            2) log_end_msg 1 ;;
+        esac
+        ;;
+    status)
+        is_running
+        status=\$?
+        case \$status in
+            0) 
+                log_success_msg "\$DESC is started: \$NAME"
+                exit 0;
+                ;;
+            1) 
+                log_failure_msg "\$DESC is not started: \$NAME"
+                exit 3;
+                ;;
+            *)
+                log_failure_msg "\$DESC status unknown: \$NAME"
+                exit 4;
+                ;;
         esac
         ;;
     restart|force-reload)
-        [ "\$VERBOSE" != no ] && log_daemon_msg "Restaring \$DESC" "\$NAME"
+        log_daemon_msg "Restaring \$DESC" "\$NAME"
         do_stop
         case "\$?" in
             0|1)
