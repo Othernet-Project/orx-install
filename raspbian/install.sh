@@ -126,7 +126,7 @@ is_in_sources() {
 backup() {
     if [[ -f "$1" ]] && ! [[ -f "${1}.old" ]]; then
         cp "$1" "${1}.old"
-        echo "Backed up '$1' to '${1}.old'"
+        echo "Backed up '$1' to '${1}.old'" >> "$LOG"
     fi
 }
 
