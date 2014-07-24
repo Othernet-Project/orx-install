@@ -27,8 +27,6 @@ ROOT=0
 OK=0
 YES=0
 NO=1
-XBMC_USER=xbmc
-XBMC_GROUPS=(input audio video dialout plugdev tty)
 
 # Command aliases
 #
@@ -110,14 +108,6 @@ do_or_pass() {
     "$@" >> $LOG 2>&1 || true
 }
 
-# ensure_group(name)
-#
-# Ensure system group with given name exists.
-#
-ensure_group() {
-    grep "$1" /etc/group &> /dev/null || do_or_fail addgroup --system "$1"
-}
-
 # is_in_sources(name)
 #
 # Find out if any of the package source lists contain the name
@@ -164,7 +154,7 @@ echo "OK"
 
 section "Port 80 free"
 if [[ $(checknet "127.0.0.1:80") == $OK ]]; then
-    warn_and_die "Port 80 is taken. Disable the XBMC webserver and try again."
+    warn_and_die "Port 80 is taken. Disable any webservers and try again."
 fi
 echo "OK"
 
@@ -178,11 +168,6 @@ if [[ $(is_in_sources jessie) == $NO ]]; then
     cat > "$PKGLISTS/jessie.list" <<EOF
 deb http://archive.raspbian.org/raspbian jessie main contrib non-free
 deb-src http://archive.raspbian.org/raspbian jessie main contrib non-free
-EOF
-fi
-if [[ $(is_in_sources mene.za.net) == $NO ]]; then
-    cat > "$PKGLISTS/mene.list" << EOF
-deb http://archive.mene.za.net/raspbian wheezy contrib
 EOF
 fi
 if [[ $(is_in_sources tvheadend.org) == $NO ]]; then
@@ -199,39 +184,9 @@ echo "DONE"
 section "Installing packages"
 do_or_fail apt-get update
 DEBIAN_FRONTEND=noninteractive do_or_fail apt-get -y --force-yes install \
-    python3.4 python3.4-dev python3-setuptools xbmc tvheadend
+    python3.4 python3.4-dev python3-setuptools tvheadend
 echo "DONE"
 
-###############################################################################
-# XBMC
-###############################################################################
-
-section "Configuring XBMC"
-# Create 'xbmc' user
-if ! [[ $(grep "$XBMC_USER" /etc/passwd) ]]; then
-    do_or_fail useradd "$XBMC_USER"
-fi
-# Create any missing groups
-for grp in ${XBMC_GROUPS[@]}; do
-    ensure_group "$grp"
-done
-# Ensure it belongs to necessary groups
-for grp in ${XBMC_GROUPS[@]}; do
-    do_or_pass gpasswd -a "$XBMC_USER" "$grp"
-done
-# Add udev rules
-backup "$INPUT_RULES"
-cat > "$INPUT_RULES" <<EOF
-SUBSYSTEM=="input", GROUP="input", MODE="0660"
-KERNEL=="tty[0-9]*", GROUP="tty", MODE="0660"
-EOF
-# Configure XBMC to start on boot
-if ! [[ $(grep "ENABLED=1" /etc/default/xbmc) ]]; then
-    backup /etc/default/xbmc
-    cat /etc/default/xbmc.old | sed 's|ENABLED=0|ENABLED=1|' \
-        > /etc/default/xbmc
-fi
-echo "DONE"
 
 ###############################################################################
 # Librarian
