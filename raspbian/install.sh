@@ -376,7 +376,7 @@ esac
 
 :
 EOF
-do_or_fail chmod +x "/etc/init.d/$NAME"
+do_or_fail update-rc.d $NAME defaults
 echo "DONE"
 
 section "Starting Librarian"
