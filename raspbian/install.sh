@@ -389,4 +389,11 @@ echo "DONE"
 
 touch "$LOCK"
 
-echo "You may want to reboot the system now."
+cat <<EOF 
+TVHeadend has been installed with default configuration. 
+If you wish to change the configuration, run:
+
+    dpkg-reconfigure tvheadend
+
+EOF
+
