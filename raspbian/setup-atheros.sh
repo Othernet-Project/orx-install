@@ -360,14 +360,14 @@ SCRIPTNAME="/etc/init.d/\$NAME"
 DESC="DNS spoofing service"
 PIDFILE="/var/run/\${NAME}.pid"
 DAEMON=/usr/sbin/dnsspoof
-DAEMON_ARGS="-I $WLAN -f $DNSCFG"
+DAEMON_ARGS="-i $WLAN -f $DNSCFG"
 
 # Load init settings and LSB functions
 . /lib/init/vars.sh
 . /lib/lsb/init-functions
 
 do_start() {
-    start-stop-daemon --start --quiet --background --make-pid \
+    start-stop-daemon --start --quiet --background --make-pid \\
         --pidfile "\$PIDFILE" --exec \$DAEMON -- \$DAEMON_ARGS
     return \$?
 }
