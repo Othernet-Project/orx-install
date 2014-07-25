@@ -428,9 +428,9 @@ echo "DONE"
 ###############################################################################
 
 section "Configuring system services"
-do_or_fail update-rc.d hostapd defaults
-do_or_fail update-rc.d isc-dhcp-server defaults
-do_or_fail update-rc.d dnsspoof defaults
+do_or_fail insserv hostapd
+do_or_fail insserv isc-dhcp-server
+do_or_fail insserv dnsspoof
 echo "DONE"
 
 section "Starting AP"
