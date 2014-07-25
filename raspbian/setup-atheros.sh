@@ -272,6 +272,7 @@ section "Configuring DHCP server"
 if ! [[ $(grep "interface $WLAN" "$DHCPCFG") ]]; then
     backup "$DHCPCFG"
     cat > "$DHCPCFG" <<EOF
+authoritative;
 default-lease-time 600;
 max-lease-time 7200;
 option subnet-mask $NETMASK;
