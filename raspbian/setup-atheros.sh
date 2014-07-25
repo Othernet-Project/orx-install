@@ -26,6 +26,7 @@ ROOT=0
 
 # Files and locations
 NETCFG=/etc/network/interfaces
+PLUGCFG=/etc/default/ifplugd
 DHCPCFG=/etc/dhcp/dhcpd.conf
 DHCPDFL=/etc/default/isc-dhcp-server
 APDFL=/etc/default/hostapd
@@ -213,17 +214,8 @@ echo "OK"
 # Networking
 ###############################################################################
 
-section "Configuring wireless interface '$WLAN'"
-if ! [[ $(grep "$WLAN" "$NETCFG") ]]; then
-    cat >> "$NETCFG" <<EOF
-auto $WLAN
-iface $WLAN inet static
- address $IPADDR
- netmask $NETMASK
-EOF
-else
-    echo "SKIPPED"
-    cat <<EOF
+cat <<EOF
+
 If you ran this script before, the wireless interface 
 may already be configured correctly and you may safely 
 ignore this message and answer with 'N'.
@@ -232,17 +224,35 @@ Network configuration for $WLAN already exists in
 '$NETCFG'. The correct configuration for $WLAN
 should look like this:
 
-    auto $WLAN
+    allow-hotplug $WLAN
     iface $WLAN inet static
      address $IPADDR
      netmask $NETMASK
 
+You also want to set eth0 to be 'auto' instead of 
+'allow-hotplug'.
+
 EOF
-    read -p "Would you like to edit '$NETCFG' now? [y/N] " -n 1 editnow
-    if [[ "$editnow" == y ]] || [[ "$editnow" == Y ]]; then
-        $EDIT "$NETCFG"
-    fi
+read -p "Would you like to edit network configuration now? [y/N] " -n 1 editnow
+echo ""
+if [[ "$editnow" == y ]] || [[ "$editnow" == Y ]]; then
+    $EDIT "$NETCFG"
 fi
+
+cat <<EOF
+
+You probably also want to disable hotplugging for eth0 
+in '$PLUGCFG'.
+
+EOF
+read -p "Disable hotplugging for eth0? [y/N]" -n 1 editnow
+echo ""
+if [[ "$editnow" == y ]] || [[ "$editnow" == Y ]]; then
+    backup "$PLUGCFG"
+    cat "${PLUGCFG}.old" | \
+        sed 's|^HOTPLUG_INTERFACES=".*"|HOTPLUG_INTERFACE=""|' > "$PLUGCFG"
+fi
+
 
 section "Checking network configuration"
 do_or_fail ifdown $WLAN
