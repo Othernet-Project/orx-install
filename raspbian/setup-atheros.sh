@@ -396,6 +396,7 @@ case "\$1" in
         esac
         ;;
     restart|force-reload)
+        log_daemon_msg "Restarting \$DESC" "\$NAME"
         do_stop
         case "\$?" in
             0|1)
