@@ -283,8 +283,12 @@ subnet ${SUBNET}.0 netmask $NETMASK {
 }
 EOF
 fi
-backup "$DHCPDFL"
-sed 's/^INTERFACES=""/INTERFACES="'$WLAN'"/' "${DHCPDFL}.old" > "${DHCPDFL}"
+if [[ -f "$DHCPDFL" ]]; then
+    backup "$DHCPDFL"
+    sed 's/^INTERFACES=""/INTERFACES="'$WLAN'"/' "${DHCPDFL}.old" > "${DHCPDFL}"
+else
+    echo "INTERFACES=\"$WLAN\"" > "$DHCPDFL"
+fi
 echo "DONE"
 
 ###############################################################################
