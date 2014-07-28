@@ -22,6 +22,7 @@ set -e
 
 # Constants
 RELEASE=0.1a3
+ONDD_RELEASE="0.1.0-0"
 NAME=librarian
 ROOT=0
 OK=0
@@ -42,6 +43,7 @@ PYTHON=/usr/bin/python3
 
 # URLS and locations
 TARS="https://github.com/Outernet-Project/$NAME/archive/"
+DEBS="http://outernet-project.github.io/orx-install"
 EXT=".tar.gz"
 TARBALL="v${RELEASE}${EXT}"
 SRCDIR="/opt/$NAME"
@@ -187,6 +189,16 @@ DEBIAN_FRONTEND=noninteractive do_or_fail apt-get -y --force-yes install \
     python3.4 python3.4-dev python3-setuptools tvheadend
 echo "DONE"
 
+###############################################################################
+# Outernet Data Delivery agent
+###############################################################################
+
+section "Installing Outernet Data Delivery agent"
+do_or_fail wget --directory-prefix "$TMPDIR" \
+    "$DEBS/ondd_${ONDD_RELEASE}_armhf.deb"
+do_or_fail dpkg -i "$TMPDIR/ondd_${ONDD_RELEASE}_armhf.deb"
+do_or_pass rm "$TMPDIR/ondd_${ONDD_RELEASE}_armhf.deb"
+echo "DONE"
 
 ###############################################################################
 # Librarian
