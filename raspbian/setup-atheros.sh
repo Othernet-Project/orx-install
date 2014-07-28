@@ -332,15 +332,6 @@ section "Configuring DNS"
 cat > "$DNSCFG" <<EOF
 $IPADDR outernet
 EOF
-cat > "$DSNIFF_UPSTART" <<EOF
-description "DNS spoofing server"
-
-start on (started networking)
-stop on (stopped networking)
-respawn
-
-exec /usr/sbin/dnsspoof -i $WLAN -f $DNSCFG
-EOF
 cat > "$DSNIFF_INIT" << EOF
 #! /bin/sh
 ### BEGIN INIT INFO
