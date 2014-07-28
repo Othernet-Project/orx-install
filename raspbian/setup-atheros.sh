@@ -327,7 +327,7 @@ echo "DONE"
 
 section "Configuring DNS"
 cat > "$DNSCFG" <<EOF
-$IPADDR outernet
+$IPADDR *
 EOF
 cat > "$DSNIFF_INIT" << EOF
 #! /bin/sh
