@@ -348,20 +348,33 @@ SCRIPTNAME="/etc/init.d/\$NAME"
 DESC="DNS spoofing service"
 PIDFILE="/var/run/\${NAME}.pid"
 DAEMON=/usr/sbin/dnsspoof
-DAEMON_ARGS="-i $WLAN -f $DNSCFG"
+CONF=/etc/dnsspoof.conf
 
 # Load init settings and LSB functions
 . /lib/init/vars.sh
 . /lib/lsb/init-functions
 
 do_start() {
-    start-stop-daemon --start --quiet --background --make-pid \\
-        --pidfile "\$PIDFILE" --exec \$DAEMON -- \$DAEMON_ARGS
-    return \$?
+    tries=5
+    while [ "\$tries" -ne "-1" ]; do
+        echo "[\$(date)] Starting \$DESC (tries left #\$tries)" >> "\$LOGFILE"
+        \$DAEMON -i $WLAN -f "\$CONF" >> "\$LOGFILE" 2>&1 &
+        pid=\$!
+        sleep 2
+        if [ \$(ps -p "\$pid" -o pid=) = "\$pid" ]; then
+            echo "[\$(date)] Started \$DESC (pid: \$pid)" >> "\$LOGFILE"
+            echo "\$pid" > "\$PIDFILE"
+            return 0
+        fi
+        tries=\$(expr \$tries - 1)
+    done
+    echo "[\$(date)] Failed to start \$DESC" >> "\$LOGFILE"
+    return 2
 }
 
 do_stop() {
-    start-stop-daemon --stop --quiet --pidfile "\$PIDFILE"
+    kill -s TERM \$(cat "\$PIDFILE")
+    rm "\$PIDFILE"
     return \$?
 }
 
