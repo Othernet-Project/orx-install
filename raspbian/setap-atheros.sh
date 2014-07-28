@@ -351,6 +351,7 @@ NAME="dnsspoof"
 SCRIPTNAME="/etc/init.d/\$NAME"
 DESC="DNS spoofing service"
 PIDFILE="/var/run/\${NAME}.pid"
+LOGFILE="/var/log/\${NAME}.log"
 DAEMON=/usr/sbin/dnsspoof
 CONF=/etc/dnsspoof.conf
 
