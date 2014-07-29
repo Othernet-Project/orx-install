@@ -22,6 +22,7 @@ set -e
 
 # Constants
 RELEASE=0.1a3
+ONDD_RELEASE="0.1.0-2"
 NAME=librarian
 ROOT=0
 OK=0
@@ -30,6 +31,7 @@ NO=1
 
 # URLS and locations
 TARS="https://github.com/Outernet-Project/$NAME/archive/"
+PKGS="http://outernet-project.github.io/orx-install"
 EXT=".tar.gz"
 TARBALL="v${RELEASE}${EXT}"
 OPTDIR="/opt"
@@ -97,7 +99,7 @@ fail() {
 #
 # Runs a command and fails if commands returns with a non-0 status
 #
-do_or_fail() {
+do_or_fail() {http://outernet-project.github.io/orx-install/ondd-0.1.0-2-armv6h.pkg.tar.xz
     "$@" >> $LOG 2>&1 || fail
 }
 
@@ -175,6 +177,17 @@ do_or_fail $PACMAN -Sq --needed python python-pip git openssl avahi python2 \
 echo "DONE"
 
 ###############################################################################
+# ONDD
+###############################################################################
+
+section "Installing Outernet Data Delivery agent"
+do_or_fail $WGET --directory-prefix "$TMPDIR" \
+    "${PKGS}/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
+do_or_fail $PACMAN -U "$TMPDIR/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
+do_or_pass rm -f "$TMPDIR/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
+echo "DONE"
+
+###############################################################################
 # Librarian
 ###############################################################################
 
@@ -246,6 +259,7 @@ fi
 # Configure system services
 section "Configuring system services"
 do_or_fail systemctl daemon-reload
+ensure_service ondd
 ensure_service $NAME
 ensure_service tvheadend
 echo "DONE"
