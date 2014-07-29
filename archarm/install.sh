@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# install-librarian.sh: Install Outernet's Librarian on RaspBMC
+# install.sh: Install Outernet's Librarian on Arch ARM
 # Copyright (C) 2014, Outernet Inc.
 # Some rights reserved.
 #
@@ -25,6 +25,8 @@ RELEASE=0.1a3
 NAME=librarian
 ROOT=0
 OK=0
+YES=0
+NO=1
 
 # URLS and locations
 TARS="https://github.com/Outernet-Project/$NAME/archive/"
@@ -50,6 +52,7 @@ UNPACK="tar xzf"
 MKD="mkdir -p"
 PYTHON=/usr/bin/python
 PACMAN="pacman --noconfirm --noprogressbar"
+MAKEPKG="makepkg --noconfirm"
 
 # checknet(URL)
 # 
@@ -66,10 +69,19 @@ checknet() {
 # Prints a big fat warning message and exits
 #
 warn_and_die() {
+    echo "FAIL"
     echo "=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*"
     echo "$1"
     echo "=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*"
     exit 1
+}
+
+# section(message)
+#
+# Echo section start message without newline.
+#
+section() {
+    echo -n "${1}... "
 }
 
 # fail()
@@ -97,53 +109,94 @@ do_or_pass() {
     "$@" >> $LOG 2>&1 || true
 }
 
-# Make sure we're root
+# backup()
+#
+# Back up a file by copying it to a path with '.old' suffix and echo about it
+#
+backup() {
+    if [[ -f "$1" ]] && ! [[ -f "${1}.old" ]]; then
+        cp "$1" "${1}.old"
+        echo "Backed up '$1' to '${1}.old'" >> "$LOG"
+    fi
+}
+
+# ensure_service(name)
+#
+# Ensure that service is enabled and started. It enables services only if not 
+# already enabled, and restarts services that have already been started.
+#
+ensure_service() {
+    if ! [[ $(systemctl is-enabled "$1" | grep "enabled") ]]; then
+        do_or_fail systemctl enable "$1"
+    fi
+    if [[ $(systemctl status "$1" | grep "Active:" | grep "inactive") ]]; then
+        do_or_fail systemctl start "$1"
+    else
+        do_or_fail systemctl restart "$1"
+    fi
+}
+
+###############################################################################
+# Preflight check
+###############################################################################
+
+section "Root permissions"
 if [[ $UID != $ROOT ]]; then
     warn_and_die "Please run this script as root."
 fi
+echo "OK"
 
-# Check if there's a lock file
+section "Lock file"
 if [[ -f "$LOCK" ]]; then
     warn_and_die "Already set up. Remove lock file '$LOCK' to reinstall."
 fi
+echo "OK"
 
-# Checks internet connection. 0 means OK.
+section "Internet connection"
 if [[ $(checknet "http://example.com/") != $OK ]]; then
     warn_and_die "Internet connection is required."
 fi
+echo "OK"
 
-# Check if port 80 is taken
+section "Port 80 free"
 if [[ $(checknet "127.0.0.1:80") == $OK ]]; then
-    warn_and_die "Port 80 is taken. Disable the XBMC webserver or stop $NAME."
+    warn_and_die "Port 80 is taken. Disable the webservers or stop $NAME."
 fi
+echo "OK"
 
-echo -n "Installing packages... "
+###############################################################################
+# Packages
+##############################################################################https://aur.archlinux.org/packages/tv/tvheadend/tvheadend.tar.gz#
+
+section "Installing packages"
 do_or_fail $PACMAN -Sqy
-do_or_fail $PACMAN -Sq --needed xbmc-rbp python python-pip polkit
+do_or_fail $PACMAN -Sq --needed python python-pip git openssl avahi python2 \
+    base-devel
 echo "DONE"
 
-# Obtain and unpack the Librarian source
-echo -n "Getting $NAME v$RELEASE sources... "
+###############################################################################
+# Librarian
+###############################################################################
+
+section "Installing Librarian"
 do_or_pass rm "$TMPDIR/$TARBALL" # Make sure there isn't any old one
-$WGET --directory-prefix "$TMPDIR" "${TARS}${TARBALL}" || fail
+do_or_fail $WGET --directory-prefix "$TMPDIR" "${TARS}${TARBALL}"
 do_or_fail $UNPACK "$TMPDIR/$TARBALL" -C "$OPTDIR"
 do_or_pass rm "$SRCDIR" # for some reason `ln -f` doesn't work, so we remove
 do_or_fail ln -s "${SRCDIR}-${RELEASE}" "$SRCDIR"
 do_or_fail rm "$TMPDIR/$TARBALL" # Remove tarball, no longer needed
 echo "DONE"
 
-# Install dependencies globally
-echo -n "Installing Python packages... "
+section "Installing Python packages"
 do_or_fail $PIP install -r "$SRCDIR/conf/requirements.txt"
 echo "DONE"
 
-# Create necessary directories
-echo -n "Creating necessary directories... "
+section "Creating necessary directories"
 do_or_fail $MKD "$SPOOLDIR"
 do_or_fail $MKD "$SRVDIR" >> $LOG 2>&1
 echo "DONE"
 
-echo -n "Creating $NAME startup script... "
+section "Creating $NAME startup script"
 cat > "$BINDIR/$NAME" <<EOF
 #!/usr/bin/bash
 PYTHONPATH="$SRCDIR" $PYTHON "$SRCDIR/$NAME/app.py"
@@ -151,8 +204,7 @@ EOF
 do_or_fail chmod +x "$BINDIR/$NAME"
 echo "DONE"
 
-# Create systemd unit for Librarian
-echo -n "Creating $NAME systemd unit... "
+section "Creating $NAME systemd unit"
 cat > "/etc/systemd/system/${NAME}.service" <<EOF
 [Unit]
 Description=$NAME service
@@ -168,39 +220,39 @@ WantedBy=multi-user.target
 EOF
 echo "DONE"
 
-# Configure PolicyKit to allow shutdown/reboot actions
-# https://github.com/chaosdorf/archlinux-xbmc/blob/master/releng/root-image/etc/polkit-1/rules.d/10-xbmc.rules
-echo -n "Configuring PolicyKit rules... "
-cat > "/etc/polkit-1/rules.d/10-xbmc.rules" <<EOF
-polkit.addRule(function(action, subject) {
-    if(action.id.match("org.freedesktop.login1.") && subject.isInGroup("power")) {
-        return polkit.Result.YES;
-    }
-});
+###############################################################################
+# TVHeadend
+###############################################################################
 
-polkit.addRule(function(action, subject) {
-    if (action.id.indexOf("org.freedesktop.udisks") == 0 && subject.isInGroup("storage")) {
-        return polkit.Result.YES;
-    }
-});
-EOF
-echo "DONE"
+section "Installing TVHeadend from AUR"
+if ! [[ $(pacman -Q tvheadend > /dev/null 2>&1) ]]; then
+    do_or_fail $WGET --directory-prefix "$TMPDIR" \
+        https://aur.archlinux.org/packages/tv/tvheadend/tvheadend.tar.gz
+    do_or_fail $UNPACK "$TMPDIR/tvheadend.tar.gz"
+    do_or_fail rm "$TMPDIR/tvheadend.tar.gz"
+    cd tvheadend
+    do_or_fail $MAKEPKG --asroot -i
+    cd ..
+    do_or_fail rm -rf tvheadend
+    echo "DONE"
+else
+    echo "SKIPPING"
+fi
+
+###############################################################################
+# System services
+###############################################################################
 
 # Configure system services
-echo -n "Configuring system services... "
+section "Configuring system services"
 do_or_fail systemctl daemon-reload
-if ! [[ $(systemctl is-enabled $NAME | grep "enabled") ]]; then
-    do_or_fail systemctl enable librarian
-fi
-if [[ $(systemctl status $NAME | grep "Active:" | grep "inactive") ]]; then
-    do_or_fail systemctl start librarian
-else
-    do_or_fail systemctl restart librarian
-fi
-if ! [[ $(systemctl is-enabled xbmc | grep "enabled") ]]; then
-    do_or_fail systemctl enable xbmc
-fi
+ensure_service $NAME
+ensure_service tvheadend
 echo "DONE"
+
+###############################################################################
+# Cleanup
+###############################################################################
 
 touch "$LOCK"
 
