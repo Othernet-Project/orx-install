@@ -3,6 +3,9 @@ Description=Outernet Data Delivery agent service
 
 [Service]
 ExecStart=/usr/sbin/ondd
+RestartSec=20s
+TimeoutStartSec=2min
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
