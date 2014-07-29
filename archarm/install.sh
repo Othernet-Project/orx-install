@@ -99,7 +99,7 @@ fail() {
 #
 # Runs a command and fails if commands returns with a non-0 status
 #
-do_or_fail() {http://outernet-project.github.io/orx-install/ondd-0.1.0-2-armv6h.pkg.tar.xz
+do_or_fail() {
     "$@" >> $LOG 2>&1 || fail
 }
 
