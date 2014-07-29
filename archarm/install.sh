@@ -181,11 +181,16 @@ echo "DONE"
 ###############################################################################
 
 section "Installing Outernet Data Delivery agent"
-do_or_fail $WGET --directory-prefix "$TMPDIR" \
-    "${PKGS}/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
-do_or_fail $PACMAN -U "$TMPDIR/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
-do_or_pass rm -f "$TMPDIR/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
-echo "DONE"
+if ! pacman -Q ondd 2>> "$LOG" | grep "$ONDD_RELEASE" > /dev/null;then
+    do_or_fail $WGET --directory-prefix "$TMPDIR" \
+        "${PKGS}/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
+    do_or_fail $PACMAN -U "$TMPDIR/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
+    do_or_pass rm -f "$TMPDIR/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
+    echo "DONE"
+else
+    echo "ONDD already installed." >> "$LOG"
+    echo "SKIPPED"
+fi
 
 ###############################################################################
 # Librarian
@@ -238,7 +243,7 @@ echo "DONE"
 ###############################################################################
 
 section "Installing TVHeadend from AUR"
-if ! [[ $(pacman -Q tvheadend > /dev/null 2>&1) ]]; then
+if ! pacman -Q tvheadend 1> /dev/null 2>> "$LOG"; then
     do_or_fail $WGET --directory-prefix "$TMPDIR" \
         https://aur.archlinux.org/packages/tv/tvheadend/tvheadend.tar.gz
     do_or_fail $UNPACK "$TMPDIR/tvheadend.tar.gz"
@@ -249,7 +254,8 @@ if ! [[ $(pacman -Q tvheadend > /dev/null 2>&1) ]]; then
     do_or_fail rm -rf tvheadend
     echo "DONE"
 else
-    echo "SKIPPING"
+    echo "TVHeadend already installed." >> "$LOG"
+    echo "SKIPPED"
 fi
 
 ###############################################################################
