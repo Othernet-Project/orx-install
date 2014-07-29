@@ -1,0 +1,8 @@
+[Unit]
+Description=Outernet Data Delivery agent service
+
+[Service]
+ExecStart=/usr/sbin/ondd
+
+[Install]
+WantedBy=multi-user.target
