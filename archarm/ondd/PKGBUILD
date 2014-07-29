@@ -1,7 +1,7 @@
 # Maintainer: Outernet Inc <branko@outernet.is>
 pkgname=ondd
 pkgver=0.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Outernet Data Delivery agent binary"
 arch=(armv6h)
 url="http://outernet-project.github.io/orx-install/"
@@ -21,19 +21,14 @@ source=(
 http://outernet-project.github.io/orx-install/${pkgname}_${pkgver}-0_armhf.deb
 ondd.service
 )
-noextract=(${pkgname}_${pkgver}-0_armhf.deb ondd.service)
+noextract=()
 sha256sums=(
 15f334af28a14cf68c36dfcb93fa83c0751a7a815fedbf47d30a0ee673147570
-ceaadc75852f16223fb8b185ee30d707c6809da9d481040a96c259a5f7a5f4ca
+0c0acce4600e4ef7d9150dca18cc44fcdc841134f35c182d13afdc1807646683
 )
 
 build() {
-  ar xv ${pkgname}_${pkgver}-0_armhf.deb
-  rm -rf debian-binary
-  rm -f control.tar.gz
   tar xvf data.tar.gz
-  rm -rf etc
-  rm -rf var
 }
 
 package() {
