@@ -226,7 +226,10 @@ should look like this:
      address $IPADDR
      netmask $NETMASK
 
-You also want to set eth0 to be 'auto' instead of 
+Make sure the interface configuration for $WLAN contains 
+no 'wpa-conf' lines.
+
+You also want to set eth0 to 'auto' instead of 
 'allow-hotplug'.
 
 EOF
