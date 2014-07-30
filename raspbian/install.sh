@@ -429,12 +429,42 @@ esac
 
 :
 EOF
-chmod +x "/etc/init.d/$NAME"
-do_or_fail update-rc.d $NAME defaults
 echo "DONE"
 
-section "Starting Librarian"
+if ! grep "--noacl" "/etc/init.d/tvheadend" > /dev/null 2> "$LOG"; then
+    read -p "Do you wish to disable superuser for TVHeadend? [y/N] " -n 1 tvacl
+    echo ""
+    if [[ "$tvacl" == "Y" ]] || [[ "$tvacl" == "y" ]]; then
+        backup "/etc/init.d/tvheadend"
+        chmod -x "/etc/init.d/tvheadend.old"
+        sed -i 's|ARGS="-f"|ARGS="-f --noacl"|' "/etc/init.d/tvheadend"
+        backup "/etc/init/tvheadend.conf"
+        sed -i 's|ARGS="-f"|ARGS="-f --noacl"|' "/etc/init/tvheadend.conf"
+    else
+        read -p "Do you want to set up superuser for TVHeadend? [y/N] " -n 1 tvsu
+        echo ""
+        if [[ "$tvsu" == "Y" ]] || [[ "$tvsu" == "y" ]]; then
+            dpkg-reconfigure tvheadend
+        else
+            cat <<EOF
+If you wish to manually configure the superuser account for 
+TVHeadend, you can run:
+
+    dpkg-reconfigure tvheadend
+
+EOF
+        fi
+    fi
+fi
+
+
+section "Configuring system services"
+chmod +x "/etc/init.d/$NAME"
+do_or_fail update-rc.d $NAME defaults
+do_or_fail update-rc.d ondd defaults
 do_or_fail service $NAME start
+do_or_fail service ondd start
+do_or_fail service tvheadend restart
 echo "DONE"
 
 ###############################################################################
@@ -443,11 +473,4 @@ echo "DONE"
 
 touch "$LOCK"
 
-cat <<EOF 
-TVHeadend has been installed with default configuration. 
-If you wish to change the configuration, run:
-
-    dpkg-reconfigure tvheadend
-
-EOF
 
