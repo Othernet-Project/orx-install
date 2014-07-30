@@ -1,0 +1,162 @@
+# Installing ORx on Raspbian Pi with Arch ARM
+
+This document describes the prerequisites and steps for creating a home-made
+Outernet Receiver.
+
+## What you need
+
+You will need the following:
+
+- Satellite dish (60cm and larger)
+- LNB (must support Ku band)
+- USB satellite tuner (see below for devices know to work)
+- Raspberry Pi (model B or B+ recommended)
+- Internet connection
+- HDMI cable for display connection (or HDMI-DVI, HDMI-VGA and similar
+  convertors)
+- USB keyboard
+- Micro USB cable or AC power adaptor for Raspberry Pi
+- SD card (4GB or more should be fine)
+- (optional) Wi-Fi dongle (see below for supported devices)
+
+## Point the dish
+
+See *Tuning into the signal* section for information on where you should point
+your dish.
+
+## Prepare for software install
+
+This section is intended for people who are not familiar with Raspberry Pi.
+Experienced users may safely skip to next section.
+
+Format the SD card and unpack [NOOBS](http://www.raspberrypi.org/downloads/).
+Insert the card into the card slot on Raspberry Pi. Attach the display's HDMI
+cable and USB keyboard. Connect the Ethernet cable. Finally, connect the micro
+USB cable or AC adaptor.
+
+Once NOOBS boots up, it will display a choice of operating systems it can
+install. Mark Arch Linux ARM and proceed (press i key to install).
+
+When the system is installed, press OK and Raspberry Pi will reboot.  One
+booted, you can log into Arch Linux ARM either directly using the attached
+keyboard and display, or you can SSH into it. If you decide to SSH into it, you
+may reattach the keyboard and display to your PC.
+
+You can log into the system using username root and password root. Once logged
+into the system, you want to configure repository package mirrors.
+
+Run the following commands:
+
+    mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.old
+    sed -i 's|^# Server|Server|' /etc/pacman.d/mirrorlist.old
+    rankmirrors /etc/pacman.d/mirrorlist.old > /etc/pacman.d/mirrorlist
+
+## Install Outernet software and TVHeadend
+
+To install the base software for Outernet Receiver, you can use our install
+script:
+
+    wget https://raw.githubusercontent.com/Outernet-Project/orx-install/master/archarm/install.sh
+    bash install.sh
+
+The script will do the following:
+
+1. installs necessary packages (Python 3, Python 2, openssl, git, avahi)
+1. installs firmwares for supported DVB-S/S2 tuners (see list below)
+1. installs Outernet Data Delivery agent package
+1. installs Outernet Librarian
+1. Creates Librarian system service
+1. Creates necessary directories
+1. Installs TVHeadend from AUR
+1. Configures and starts system services
+
+You can troubleshoot problems during the install by looking at `install.log`
+file created in the same directory where you started the install script.
+
+## Upgrade the kernel
+
+For some DVB tuners, you may need a newer kernel. You can upgrade to the latest 
+version of the kernel by running:
+
+    pacman -Sy
+    pacman -Su
+    pacman -S linux-raspberrypi-latest linux-raspberrypi-latest-headers
+
+Answer Yes (press *y*) to all questions.
+
+## Attach the DVB-S/S2 tuner
+
+Attach your DVB-S/S2 tuner to the USB port (you may need a USB hub depending on
+Raspberry Pi model).
+
+## Restart Raspberry Pi
+
+Restart Raspberry Pi. You can issue the reboot command, or simply unplug and
+plug back in the micro USB cable or AC adaptor.
+
+## Tune into the Outernet channel
+
+Once Raspberry Pi is booted, access its IP address and port 9981. For instance,
+if your Raspberry Pi IP address is 192.168.10.247, you will access
+192.168.10.247:9981. This brings up the TVHeadend interface.
+
+![TVHeadend: choosing DVB interface](img/00_tvheadend.png)
+
+Check the *Enabled* checkbox for your tuner, and click Save.
+
+![TVHeadend: enabling DVB interface](img/01_enable.png)
+
+Click the *Add DVB Network by location...* button on the left and find your
+satellite.
+
+![TVHeadend: add network](img/02_network.png)
+
+TVHeadend will start performing the initial scan to get the names of all
+channels. Give it a few minutes, then switch over to *Services* tab.
+
+![TVHeadend: services](img/03_map.png)
+
+Locate Outernet service from the list and click the *Map selected* button in 
+the toolbar above.
+
+Finally, click the *play* link next to the service name.
+
+Switch over to the *Status* tab at the top of the interface.
+
+![TVHeadend: status](img/04_status.png)
+
+You should see signal strength there.
+
+After you have performed the above steps, Outernet Data Delivery agent should
+start receiving files.
+
+## Access Librarian
+
+You can access Librarian by pointing your browser to Raspberry Pi's IP address.
+It runs as web browser so there is no need to type in any port number.
+
+Using Librarian is outside the scope of this document so we won't go into
+details here.
+
+## Convert your receiver to access point
+
+TODO
+
+## Supported USB DVB-S/S2 tuners
+
+- PCTV 460e
+- PCTV 461e (requires kernel newer than v3.14)
+- Geniatech HDStar TV box
+
+## Supported USB Wi-Fi dongles
+
+- TP-Link TL-WN722N (Atheros)
+
+## Tuning into the signal
+
+Identify the satellite that is appropriate for your location.
+
+- North America: Galaxy 19 (97.0°W) 12,177 V 23,000 3/4
+- Europe: HotBird (13.0°E) 11,470 V 27,500 5/6
+
+
