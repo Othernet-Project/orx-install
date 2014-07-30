@@ -249,7 +249,7 @@ echo "DONE"
 # Configure DNS spoofing
 echo -n "Configuring DNS spoofing... "
 cat > "$DNSCFG" <<EOF
-$IPADDR $DOMAIN
+$IPADDR *
 EOF
 cat > "$DNSSRV" <<EOF
 [Unit]
