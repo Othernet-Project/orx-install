@@ -32,16 +32,20 @@ NO=1
 # URLS and locations
 TARS="https://github.com/Outernet-Project/$NAME/archive/"
 PKGS="http://outernet-project.github.io/orx-install"
+FWS="https://github.com/OpenELEC/dvb-firmware/raw/master/firmware"
 EXT=".tar.gz"
 TARBALL="v${RELEASE}${EXT}"
 OPTDIR="/opt"
 SRCDIR="$OPTDIR/$NAME"
+FWDIR=/lib/firmware
 BINDIR="/usr/local/bin"
 SPOOLDIR=/var/spool/downloads/content
 SRVDIR=/srv/zipballs
 TMPDIR=/tmp
 LOCK=/run/lock/orx-setup.lock
 LOG="install.log"
+
+FIRMWARES=(dvb-fe-ds3000 dvb-fe-tda10071 dvb-demod-m88ds3103)
 
 # Command aliases
 #
@@ -174,6 +178,19 @@ section "Installing packages"
 do_or_fail $PACMAN -Sqy
 do_or_fail $PACMAN -Sq --needed python python-pip git openssl avahi python2 \
     base-devel
+echo "DONE"
+
+###############################################################################
+# Firmwares
+###############################################################################
+
+section "Installing firmwares"
+for fw in ${FIRMWARES[*]}; do
+    echo "Installing ${fw} firmware" >> "$LOG"
+    if ! [[ -f "$FWDIR/${fw}.fw" ]]; then
+        do_or_fail $WGET --directory-prefix "$FWDIR" "$FWS/${fw}.fw"
+    fi
+done
 echo "DONE"
 
 ###############################################################################

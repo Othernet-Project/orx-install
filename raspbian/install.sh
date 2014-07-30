@@ -44,9 +44,11 @@ PYTHON=/usr/bin/python3
 # URLS and locations
 TARS="https://github.com/Outernet-Project/$NAME/archive/"
 DEBS="http://outernet-project.github.io/orx-install"
+FWS="https://github.com/OpenELEC/dvb-firmware/raw/master/firmware"
 EXT=".tar.gz"
 TARBALL="v${RELEASE}${EXT}"
 SRCDIR="/opt/$NAME"
+FWDIR=/lib/firmware
 SPOOLDIR=/var/spool/downloads/content
 SRVDIR=/srv/zipballs
 TMPDIR=/tmp
@@ -54,6 +56,8 @@ PKGLISTS=/etc/apt/sources.list.d
 INPUT_RULES=/etc/udev/rules.d/99-input.rules
 LOCK=/run/lock/orx-setup.lock
 LOG="install.log"
+
+FIRMWARES=(dvb-fe-ds3000 dvb-fe-tda10071 dvb-demod-m88ds3103)
 
 # checknet(URL)
 # 
@@ -67,7 +71,7 @@ checknet() {
 
 # warn_and_die(message)
 #
-# Prints a big fat warning message and exits
+# Prints a big fat warning message and exitsdvb-demod-m88ds3103.fw
 #
 warn_and_die() {
     echo "FAIL"
@@ -211,6 +215,19 @@ section "Installing packages"
 do_or_fail apt-get update
 DEBIAN_FRONTEND=noninteractive do_or_fail apt-get -y --force-yes install \
     python3.4 python3.4-dev python3-setuptools tvheadend
+echo "DONE"
+
+###############################################################################
+# Firmwares
+###############################################################################
+
+section "Installing firmwares"
+for fw in ${FIRMWARES[*]}; do
+    echo "Installing ${fw} firmware" >> "$LOG"
+    if ! [[ -f "$FWDIR/${fw}.fw" ]]; then
+        do_or_fail $WGET --directory-prefix "$FWDIR" "$FWS/${fw}.fw"
+    fi
+done
 echo "DONE"
 
 ###############################################################################
