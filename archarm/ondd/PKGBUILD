@@ -1,7 +1,7 @@
 # Maintainer: Outernet Inc <branko@outernet.is>
 pkgname=ondd
 pkgver=0.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Outernet Data Delivery agent binary"
 arch=(armv6h)
 url="http://outernet-project.github.io/orx-install/"
@@ -24,7 +24,7 @@ ondd.service
 noextract=()
 sha256sums=(
 15f334af28a14cf68c36dfcb93fa83c0751a7a815fedbf47d30a0ee673147570
-0c0acce4600e4ef7d9150dca18cc44fcdc841134f35c182d13afdc1807646683
+0e3449298774dc4a0443028e01365cd747db4f0456884e50c046f32dfeea20a9
 )
 
 build() {

@@ -2,7 +2,7 @@
 Description=Outernet Data Delivery agent service
 
 [Service]
-ExecStart=/usr/sbin/ondd
+ExecStart=/usr/sbin/ondd -o /var/spool/downloads
 RestartSec=20s
 TimeoutStartSec=2min
 Restart=on-failure
