@@ -312,8 +312,8 @@ EOF
 echo "DONE"
 
 section "Starting AP"
-service hostapd start >> "$LOG" \
-    || service hostapd restart >> "$LOG" \
+service hostapd start >> "$LOG" 2>&1 \
+    || service hostapd restart >> "$LOG" 2>&1 \
     || fail
 echo "DONE"
 
