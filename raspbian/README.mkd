@@ -50,7 +50,7 @@ decide to SSH into it, you may reattach the keyboard and display to your PC.
 To install the base software for Outernet Receiver, you can use our install
 script:
 
-    wget https://raw.githubusercontent.com/Outernet-Project/orx-install/master/archarm/install.sh
+    wget https://raw.githubusercontent.com/Outernet-Project/orx-install/master/raspbian/install.sh
     bash install.sh
 
 The script will do the following:
