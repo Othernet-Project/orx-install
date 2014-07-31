@@ -58,15 +58,44 @@ WGET="wget"
 # Prints a big fat warning message and exits
 #
 warn_and_die() {
+    echo "FAILED"
     echo "=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*"
     echo "$1"
     echo "=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*"
     exit 1
 }
 
-fail_and_die() {
-    echo "FAILED"
+# section(message)
+#
+# Echo section start message without newline.
+#
+section() {
+    echo -n "${1}... "
+}
+
+# fail()
+# 
+# Echoes "FAIL" and exits
+#
+fail() {
+    echo "FAILED (see '$LOG' for details)"
     exit 1
+}
+
+# do_or_fail()
+#
+# Runs a command and fails if commands returns with a non-0 status
+#
+do_or_fail() {
+    "$@" >> $LOG 2>&1 || fail
+}
+
+# do_or_pass()
+# 
+# Runs a command and ignores non-0 return
+#
+do_or_pass() {
+    "$@" >> $LOG 2>&1 || true
 }
 
 # checknet(URL)
@@ -107,30 +136,26 @@ backup() {
     fi
 }
 
-echo -n "Root permissions... "
+section "Root permissions"
 if [[ $UID != $ROOT ]]; then
-    echo "FAILED"
     warn_and_die "Please run this script as root."
 fi
 echo "OK"
 
-echo -n "Internet connection... "
+section "Internet connection"
 if [[ $(checknet) == $NO ]]; then
-    echo "FAILED (see '$LOGFILE' for details)"
     warn_and_die "Internet connection is required."
 fi
 echo "OK"
 
-echo -n "Wi-Fi interface with AP mode support... "
+section "Wi-Fi interface with AP mode support"
 if [[ $(checkiw) == $NO ]]; then
-    echo "FAILED"
     warn_and_die "Wireless interface does not support AP mode"
 fi
 echo "OK"
 
-echo -n "Driver support... "
+section "Driver support... "
 if [[ $(checkdriver) == $NO ]]; then
-    echo "FAILED"
     warn_and_die "Please use a device that works with cfg80211 driver."
 fi
 echo "OK"
@@ -138,42 +163,43 @@ echo "OK"
 env >> "$LOGFILE"
 
 # Install necessary packages
-echo -n "Updating package database... "
-apt-get update 2>&1 >> "$LOGFILE"
+section "Updating package database"
+do_or_fail apt-get update
 echo "DONE"
 
-echo -n "Installing dependencies... "
-DEBIAN_FRONTEND=noninteractive apt-get -y --force-yes install hostapd \
-    isc-dhcp-server dsniff >> "$LOGFILE" \
-    || echo "IGNORING ERROR (see '$LOGFILE' for details)"
+section "Installing dependencies"
+DEBIAN_FRONTEND=noninteractive do_or_pass apt-get -y --force-yes install \
+    hostapd isc-dhcp-server dsniff
 echo "DONE"
 
 # TODO: First check if network-manager is enabled, and do something else if 
 # it's not. Don't just assume it's up and running.
 
-# Configure Wi-Fi interface, release network-manager control over it
+section "Overriding network manager control over wireless"
 if ! [[ $(nmcli dev | grep wlan0 | grep unmanaged) ]]; then
     backup "$NETCFG"
     # Disable network-manager control over wlan0
     grep "iface $WLAN" "$NETCFG" || cat >> "$NETCFG" <<EOF
-auto $WLAN
+allow-hotplug $WLAN
 iface $WLAN inet static
  address $IPADDR
  netmask $NETMASK
 EOF
 fi
-
-# Restart network-related services to and check network-manager devices
-echo -n "Restarting network manager... "
-service network-manager stop >> "$LOGFILE" || true 
-service network-manager start >> "$LOGFILE" || fail_and_die
 echo "DONE"
-sleep 1
 
-# Check again and bail if we couldn't get network-manager to behave
+section "Restarting network manager"
+do_or_pass service network-manager stop >> "$LOGFILE"
+do_or_fail service network-manager start >> "$LOGFILE"
+sleep 1
+echo "DONE"
+
+section "Checking network configuration"
 nmcli dev | grep $WLAN | grep unmanaged > /dev/null || \
     warn_and_die "Failed to configure Wi-Fi interface '$WLAN'."
+echo "OK"
 
+section "Configuring wireless interface"
 # Add Upstart job that overrides custom RaspBMC settings
 cat > "$WIFI_UPSTART" <<EOF
 description "Wifi reconfiguration"
@@ -188,17 +214,19 @@ end script
 
 post-start exec initctl emit --no-wait wifi-done
 EOF
+echo "DONE"
 
-echo -n "Restarting Wi-Fi interface... "
-service wifiback start >> "$LOGFILE" || fail_and_die
+section "Restarting Wi-Fi interface"
+service wifiback start >> "$LOGFILE" || fail
 sleep 2
 echo "DONE"
 
-# Final check
-ifconfig -a | grep $WLAN -A 1 | grep "inet addr:$IPADDR" > /dev/null || \
-    warn_and_die "Network configuration failed."
+section "Checking wireless settings"
+ifconfig | tee -a "$LOG" | grep $WLAN -A 1 | \
+    grep "inet addr:$IPADDR" > /dev/null || fail
+echo "OK"
 
-# Configure udhcpd if it's not configured for wlan interface
+section "Configuring DHCP"
 if ! [[ $(grep "interface $WLAN" "$DHCPCFG") ]]; then
     backup "$DHCPCFG"
     cat > "$DHCPCFG" <<EOF
@@ -215,11 +243,12 @@ subnet ${SUBNET}.0 netmask $NETMASK {
 }
 EOF
 fi
-
 backup "$DHCPDFL"
 sed 's/^INTERFACES=""/INTERFACES="'$WLAN'"/' "${DHCPDFL}.old" > "${DHCPDFL}"
+echo "DONE"
 
-# Configure hostapd if not confiugred for wlan interface
+# Configure hostapd if not configured for wlan interface
+section "Configuring hotspot"
 touch "$APCFG"
 if ! [[ $(grep "interface=$WLAN" "$APCFG") ]]; then
     if [[ -f "$APCFG" ]]; then
@@ -247,8 +276,9 @@ EOF
     backup "$APDFL"
     sed 's|^#\(DAEMON_CONF\)=""|\1="'"$APCFG"'"|' "${APDFL}.old" > "$APDFL"
 fi
+echo "DONE"
 
-# Configure DNS spoofing
+section "Configuring DNS"
 cat > "$DNSCFG" <<EOF
 $IPADDR outernet
 EOF
@@ -261,28 +291,27 @@ respawn
 
 exec /usr/sbin/dnsspoof -i $WLAN -f $DNSCFG
 EOF
+echo "DONE"
 
-echo -n "Starting AP... "
+section "Configuring system services"
+do_or_fail insserv hostapd
+do_or_fail insserv isc-dhcp-server
+echo "DONE"
+
+section "Starting AP"
 service hostapd start >> "$LOGFILE" \
     || service hostapd restart >> "$LOGFILE" \
-    || fail_and_die
-echo "OK"
+    || fail
+echo "DONE"
 
-sleep 4  # Wait for hostapd to set up a new interface
+section "Starting DHCP server"
+service isc-dhcp-server start >> "$LOGFILE" 2>&1 \
+    || service-isc-dhcp-server restart >> "$LOGFILE" 2>&1 \
+    || fail
+echo "DONE"
 
-echo -n "Starting DHCP server... "
-service isc-dhcp-server start >> "$LOGFILE" \
-    || service-isc-dhcp-server restart >> "$LOGFILE" \
-    || fail_and_die
-echo "OK"
-
-echo -n "Starting DNS spoofing... "
-service dnsspoof start >> "$LOGFILE" \
-    || service dnsspoof restart >> "$LOGFILE" \
-    || fail_and_die
-echo "OK"
-
-echo -n "Enabling services on boot... "
-update-rc.d hostapd enable >> "$LOGFILE" || fail_and_die
-update-rc.d isc-dhcp-server enable >> "$LOGFILE" || fail_and_die
-echo "OK"
+section "Starting DNS spoofing"
+service dnsspoof start >> "$LOGFILE" 2>&1 \
+    || service dnsspoof restart >> "$LOGFILE" 2>&1 \
+    || fail
+echo "DONE"
