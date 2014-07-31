@@ -27,10 +27,11 @@ ROOT=0
 # Files and locations
 NETCFG=/etc/network/interfaces
 DHCPCFG=/etc/dhcp/dhcpd.conf
-DHCPDFL=/etc/default/isc-dhcp-server
 APDFL=/etc/default/hostapd
 APCFG=/etc/hostapd/hostapd.conf
 DNSCFG=/etc/dnsspoof.conf
+DHCP_INIT=/etc/init.d/isc-dhcp-server
+AP_UPSTART=/etc/init/hostapd.conf
 DHCP_UPSTART=/etc/init/udhcpd.conf
 DSNIFF_UPSTART=/etc/init/dnsspoof.conf
 WIFI_UPSTART=/etc/init/wifiback.conf
@@ -230,6 +231,7 @@ section "Configuring DHCP"
 if ! [[ $(grep "interface $WLAN" "$DHCPCFG") ]]; then
     backup "$DHCPCFG"
     cat > "$DHCPCFG" <<EOF
+authoritative;
 default-lease-time 600;
 max-lease-time 7200;
 option subnet-mask $NETMASK;
@@ -242,9 +244,19 @@ subnet ${SUBNET}.0 netmask $NETMASK {
     range ${SUBNET}.2 ${SUBNET}.254;
 }
 EOF
+    cat > "$DHCP_UPSTART" <<EOF
+description "DHCP server"
+
+start on wifi-done
+stop on shutdown
+respawn.
+
+post-stop exec sleep 5
+
+exec /usr/sbin/dhcp -cf "$DHCPCFG" $WLAN
+EOF
+    chmod -x "$DHCP_INIT"
 fi
-backup "$DHCPDFL"
-sed 's/^INTERFACES=""/INTERFACES="'$WLAN'"/' "${DHCPDFL}.old" > "${DHCPDFL}"
 echo "DONE"
 
 # Configure hostapd if not configured for wlan interface
@@ -270,11 +282,15 @@ wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
 rsn_pairwise=CCMP
 EOF
+    
+    cat > "$AP_UPSTART" <<EOF
+description "hostapd service"
 
-    # Edit the DAEMON_CONF= line in /etc/defaults/hostapd and point it to our
-    # new configuration file.
-    backup "$APDFL"
-    sed 's|^#\(DAEMON_CONF\)=""|\1="'"$APCFG"'"|' "${APDFL}.old" > "$APDFL"
+start on wifi-done
+stop on shutdown
+
+exec /usr/sbin/hostapd "$APCFG"
+EOF
 fi
 echo "DONE"
 
@@ -289,13 +305,10 @@ start on wifi-done
 stop on shutdown
 respawn
 
+post-stop exec sleep 5
+
 exec /usr/sbin/dnsspoof -i $WLAN -f $DNSCFG
 EOF
-echo "DONE"
-
-section "Configuring system services"
-do_or_fail insserv hostapd
-do_or_fail insserv isc-dhcp-server
 echo "DONE"
 
 section "Starting AP"
@@ -306,7 +319,7 @@ echo "DONE"
 
 section "Starting DHCP server"
 service isc-dhcp-server start >> "$LOG" 2>&1 \
-    || service-isc-dhcp-server restart >> "$LOG" 2>&1 \
+    || service isc-dhcp-server restart >> "$LOG" 2>&1 \
     || fail
 echo "DONE"
 
