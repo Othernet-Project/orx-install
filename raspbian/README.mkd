@@ -60,7 +60,7 @@ Alternatively, you can run the second command with `sudo`.
 
 The script will do the following:
 
-1. add jessie repository the the list of package repositories
+1. add jessie and tvheadend repositories to the list of package repositories
 1. installs necessary packages (python3.4 python3.4-dev python3-setuptools,
    tvheadend)
 1. installs firmwares for supported DVB-S/S2 tuners (see list below)
