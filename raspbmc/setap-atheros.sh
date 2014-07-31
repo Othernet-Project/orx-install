@@ -280,7 +280,7 @@ echo "DONE"
 
 section "Configuring DNS"
 cat > "$DNSCFG" <<EOF
-$IPADDR outernet
+$IPADDR *
 EOF
 cat > "$DSNIFF_UPSTART" <<EOF
 description "DNS spoofing server"
