@@ -1,17 +1,14 @@
-ORx install scripts
-===================
+# ORx install scripts
 
 This repository contains a collection of scripts for setting up devices for
 receiving and managing Outernet broadcast content.
 
-Err... what's ORx?
-==================
+## Err... what's ORx?
 
 ORx is pronouced "Oh-Rex" and stands for Outernet Receiver X. "X" stands for
 home-made device.
 
-Supported devices and configurations
-====================================
+## Supported devices and configurations
 
 The following distributions are supported by the scripts in this repository:
 
@@ -24,21 +21,18 @@ Following DVB-S/S2 tuners have been tested with above systems:
 - PCTV 461e (USB)
 - Geniatech HDStar TV box (USB)
 
-Howto
-=====
+## Howto
 
 Please read the `README.mkd` files in each of the distribution directories.
 
-Reporting bugs
-==============
+## Reporting bugs
 
 Please use the [GitHub issue
 tracker](https://github.com/Outernet-Project/orx-install/issues) to report
 issues and feature requests. For general discussions, post in [our
 forum](https://discuss.outernet.is/category/outernet-software).
 
-License
-=======
+## License
 
 These scripts are free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
