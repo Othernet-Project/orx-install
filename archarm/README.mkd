@@ -156,7 +156,7 @@ dongles* section.
 
 Get the script that matches your dongle's chipset:
 
-    wget https://raw.githubusercontent.com/Outernet-Project/orx-install/master/raspbian/setap-CHIPSET.sh
+    wget https://raw.githubusercontent.com/Outernet-Project/orx-install/master/archarm/setap-CHIPSET.sh
 
 Replace `CHIPSET` with all-lowercase name of the chipset listed in *Supported
 USB Wi-Fi dongles* section.
