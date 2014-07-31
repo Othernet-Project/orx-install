@@ -12,8 +12,8 @@ home-made device.
 
 The following distributions are supported by the scripts in this repository:
 
-- Rasbian (Raspberry Pi, ARM v6)
-- Arch Linux ARM (Raspberry Pi, ARM v6)
+- [Rasbian](raspbian) (Raspberry Pi, ARM v6)
+- [Arch Linux ARM](archarm) (Raspberry Pi, ARM v6)
 
 Following DVB-S/S2 tuners have been tested with above systems:
 
