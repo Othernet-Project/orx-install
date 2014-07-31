@@ -21,6 +21,10 @@ Following DVB-S/S2 tuners have been tested with above systems:
 - PCTV 461e (USB)
 - Geniatech HDStar TV box (USB)
 
+For access point setup, following Wi-Fi dongles have been tested:
+
+- TP-Link TL-WN722N (Atheros)
+
 ## Howto
 
 Please read the `README.mkd` files in each of the distribution directories.
