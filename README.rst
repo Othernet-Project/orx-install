@@ -13,17 +13,29 @@ home-made device.
 Supported devices and configurations
 ====================================
 
-TODO
+The following distributions are supported by the scripts in this repository:
+
+- Rasbian (Raspberry Pi, ARM v6)
+- Arch Linux ARM (Raspberry Pi, ARM v6)
+
+Following DVB-S/S2 tuners have been tested with above systems:
+
+- PCTV 460e (USB)
+- PCTV 461e (USB)
+- Geniatech HDStar TV box (USB)
 
 Howto
 =====
 
-TODO
+Please read the `README.mkd` files in each of the distribution directories.
 
 Reporting bugs
 ==============
 
-TODO
+Please use the [GitHub issue
+tracker](https://github.com/Outernet-Project/orx-install/issues) to report
+issues and feature requests. For general discussions, post in [our
+forum](https://discuss.outernet.is/category/outernet-software).
 
 License
 =======
@@ -39,4 +51,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
 this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ONDD (Outernet Data Delivery agent) installed by these scripts is distributed 
+under separate license.
 
