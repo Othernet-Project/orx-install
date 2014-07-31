@@ -143,7 +143,49 @@ details here.
 
 ## Convert your receiver to access point
 
-TODO
+For convenience, we have provided a script that converts your Raspberry Pi into
+a Wi-Fi access point. Advanced users may prefer to configure everything
+themselves, though.
+
+Access point configuration is based on hostapd. It also performs DNS spoofing
+so that any address resolves to the device's IP address.
+
+There are many Wi-Fi dongles that can potentially be used for this purpose. Our
+scripts currently only support devices listed in the *Supported USB Wi-Fi
+dongles* section.
+
+Get the script that matches your dongle's chipset:
+
+    wget https://raw.githubusercontent.com/Outernet-Project/orx-install/master/raspbian/setap-CHIPSET.sh
+
+Replace `CHIPSET` with all-lowercase name of the chipset listed in *Supported
+USB Wi-Fi dongles* section.
+
+To start the conversion, plug in your device and simply run the script:
+
+    bash setap-CHIPSET.sh
+
+The script will perform the following modifications:
+
+1. Install necessary packages (iw hostapd dhcp dsniff)
+1. Check that the device uses the supported drivers
+1. Check that hostapd supports the device
+1. Configure the Wi-Fi interface (wlan0) to use static IP of 10.0.0.1
+1. Create and install system service that configures the interface on boot
+1. Configure hostapd
+1. Configure DHCP server
+1. Configure DNS spoofing
+1. Start the access point
+
+If the access point is not up immediately after the script runs, try waiting a
+little until all services are properly initialized. If waiting doesn't help,
+try rebooting the system. You can troubleshoot problems during install by
+taking a look at `setap.log` file created in the same directory where you ran
+the script.
+
+You can customize many of the network-related settings by editing the values
+near the top of the script file. This includes the subnet and IP address of the
+access point, the SSID and password, and so on.
 
 ## Supported USB DVB-S/S2 tuners
 
