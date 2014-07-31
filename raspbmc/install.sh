@@ -205,6 +205,19 @@ DEBIAN_FRONTEND=noninteractive do_or_fail apt-get -y --force-yes install \
 echo "DONE"
 
 ###############################################################################
+# Firmwares
+###############################################################################
+
+section "Installing firmwares"
+for fw in ${FIRMWARES[*]}; do
+    echo "Installing ${fw} firmware" >> "$LOG"
+    if ! [[ -f "$FWDIR/${fw}.fw" ]]; then
+        do_or_fail $WGET --directory-prefix "$FWDIR" "$FWS/${fw}.fw"
+    fi
+done
+echo "DONE"
+
+###############################################################################
 # Outernet Data Delivery agent
 ###############################################################################
 
