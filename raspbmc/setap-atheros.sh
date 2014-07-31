@@ -249,7 +249,7 @@ description "DHCP server"
 
 start on wifi-done
 stop on shutdown
-respawn.
+respawn
 
 post-stop exec sleep 5
 
