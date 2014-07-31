@@ -21,8 +21,7 @@ You will need the following:
 
 ## Point the dish
 
-See *Tuning into the signal* section for information on where you should point
-your dish.
+See *Transponders* section for information on where you should point your dish.
 
 ## Prepare for software install
 
@@ -94,7 +93,10 @@ Raspberry Pi model).
 Restart Raspberry Pi. You can issue the reboot command, or simply unplug and
 plug back in the micro USB cable or AC adaptor.
 
-## Tune into the Outernet channel
+## Tune into an Outernet transponder
+
+If you want to add muxes manually, you can find more information in the
+*Transponders* section.
 
 Once Raspberry Pi is booted, access its IP address and port 9981. For instance,
 if your Raspberry Pi IP address is 192.168.10.247, you will access
@@ -152,7 +154,7 @@ TODO
 
 - TP-Link TL-WN722N (Atheros)
 
-## Tuning into the signal
+## Transponders
 
 Identify the satellite that is appropriate for your location.
 
