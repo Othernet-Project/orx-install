@@ -103,21 +103,21 @@ Once Raspberry Pi is booted, access its IP address and port 9981. For instance,
 if your Raspberry Pi IP address is 192.168.10.247, you will access
 192.168.10.247:9981. This brings up the TVHeadend interface.
 
-![TVHeadend: choosing DVB interface](..img/00_tvheadend.png)
+![TVHeadend: choosing DVB interface](../img/00_tvheadend.png)
 
 Check the *Enabled* checkbox for your tuner, and click Save.
 
-![TVHeadend: enabling DVB interface](..img/01_enable.png)
+![TVHeadend: enabling DVB interface](../img/01_enable.png)
 
 Click the *Add DVB Network by location...* button on the left and find your
 satellite.
 
-![TVHeadend: add network](..img/02_network.png)
+![TVHeadend: add network](../img/02_network.png)
 
 TVHeadend will start performing the initial scan to get the names of all
 channels. Give it a few minutes, then switch over to *Services* tab.
 
-![TVHeadend: services](..img/03_map.png)
+![TVHeadend: services](../img/03_map.png)
 
 Locate Outernet service from the list and click the *Map selected* button in 
 the toolbar above.
@@ -126,7 +126,7 @@ Finally, click the *play* link next to the service name.
 
 Switch over to the *Status* tab at the top of the interface.
 
-![TVHeadend: status](..img/04_status.png)
+![TVHeadend: status](../img/04_status.png)
 
 You should see signal strength there.
 
