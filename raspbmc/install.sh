@@ -267,7 +267,6 @@ end script
 EOF
 echo "DONE"
 
-
 section "Starting Librarian"
 do_or_fail service $NAME start
 echo "DONE"
@@ -278,3 +277,4 @@ echo "DONE"
 
 touch "$LOCK"
 
+echo "Install logs can be found in '$LOG'."
