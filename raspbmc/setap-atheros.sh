@@ -167,7 +167,7 @@ section "Updating package database"
 do_or_fail apt-get update
 echo "DONE"
 
-section "Installing dependencies"
+section "Installing packages"
 DEBIAN_FRONTEND=noninteractive do_or_pass apt-get -y --force-yes install \
     hostapd isc-dhcp-server dsniff
 echo "DONE"
