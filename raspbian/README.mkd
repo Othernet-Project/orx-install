@@ -47,11 +47,16 @@ decide to SSH into it, you may reattach the keyboard and display to your PC.
 
 ## Install Outernet software and TVHeadend
 
-To install the base software for Outernet Receiver, you can use our install
-script:
+To install the base software for Outernet Receiver, you must first be root:
+
+    sudo su
+
+You can then use our install script:
 
     wget https://raw.githubusercontent.com/Outernet-Project/orx-install/master/raspbian/install.sh
     bash install.sh
+
+Alternatively, you can run the second command with `sudo`.
 
 The script will do the following:
 
