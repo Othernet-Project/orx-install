@@ -162,16 +162,14 @@ backup() {
 # Preflight checks 1
 ###############################################################################
 
-echo -n "Root permissions... "
+section "Root permissions"
 if [[ $UID != $ROOT ]]; then
-    echo "FAILED"
     warn_and_die "Please run this script as root."
 fi
 echo "OK"
 
-echo -n "Internet connection... "
+section "Internet connection"
 if [[ $(checknet) == $NO ]]; then
-    echo "FAILED (see '$LOGFILE' for details)"
     warn_and_die "Internet connection is required."
 fi
 echo "OK"
@@ -192,16 +190,14 @@ echo "DONE"
 # Preflight checks 2
 ###############################################################################
 
-echo -n "Wi-Fi interface with AP mode support... "
+section "Wi-Fi interface with AP mode support"
 if [[ $(checkiw) == $NO ]]; then
-    echo "FAILED"
     warn_and_die "Wireless interface does not support AP mode"
 fi
 echo "OK"
 
-echo -n "Driver support... "
+section "Driver support"
 if [[ $(checkdriver) == $NO ]]; then
-    echo "FAILED"
     warn_and_die "Please use a device that works with cfg80211 driver."
 fi
 echo "OK"
