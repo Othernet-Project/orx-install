@@ -34,7 +34,7 @@ DNSCFG=/etc/dnsspoof.conf
 DHCP_UPSTART=/etc/init/udhcpd.conf
 DSNIFF_UPSTART=/etc/init/dnsspoof.conf
 WIFI_UPSTART=/etc/init/wifiback.conf
-LOGFILE=setap.log
+LOG=setap.log
 
 # Network settings
 WLAN=wlan0
@@ -160,7 +160,7 @@ if [[ $(checkdriver) == $NO ]]; then
 fi
 echo "OK"
 
-env >> "$LOGFILE"
+env >> "$LOG"
 
 # Install necessary packages
 section "Updating package database"
@@ -189,8 +189,8 @@ fi
 echo "DONE"
 
 section "Restarting network manager"
-do_or_pass service network-manager stop >> "$LOGFILE"
-do_or_fail service network-manager start >> "$LOGFILE"
+do_or_pass service network-manager stop >> "$LOG"
+do_or_fail service network-manager start >> "$LOG"
 sleep 1
 echo "DONE"
 
@@ -217,7 +217,7 @@ EOF
 echo "DONE"
 
 section "Restarting Wi-Fi interface"
-service wifiback start >> "$LOGFILE" || fail
+service wifiback start >> "$LOG" || fail
 sleep 2
 echo "DONE"
 
@@ -299,19 +299,19 @@ do_or_fail insserv isc-dhcp-server
 echo "DONE"
 
 section "Starting AP"
-service hostapd start >> "$LOGFILE" \
-    || service hostapd restart >> "$LOGFILE" \
+service hostapd start >> "$LOG" \
+    || service hostapd restart >> "$LOG" \
     || fail
 echo "DONE"
 
 section "Starting DHCP server"
-service isc-dhcp-server start >> "$LOGFILE" 2>&1 \
-    || service-isc-dhcp-server restart >> "$LOGFILE" 2>&1 \
+service isc-dhcp-server start >> "$LOG" 2>&1 \
+    || service-isc-dhcp-server restart >> "$LOG" 2>&1 \
     || fail
 echo "DONE"
 
 section "Starting DNS spoofing"
-service dnsspoof start >> "$LOGFILE" 2>&1 \
-    || service dnsspoof restart >> "$LOGFILE" 2>&1 \
+service dnsspoof start >> "$LOG" 2>&1 \
+    || service dnsspoof restart >> "$LOG" 2>&1 \
     || fail
 echo "DONE"
