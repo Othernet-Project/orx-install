@@ -156,7 +156,7 @@ TODO
 
 ## Transponders
 
-Identify the satellite that is appropriate for your location.
+These are the currently active transponders:
 
 - North America: Galaxy 19 (97.0°W) 12,177 V 23,000 3/4
 - Europe: HotBird (13.0°E) 11,470 V 27,500 5/6
