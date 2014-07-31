@@ -1,4 +1,4 @@
-# Installing ORx on Raspbian Pi with Raspbian
+# Installing ORx on Raspberry Pi with Raspbian
 
 This document describes the prerequisites and steps for creating a home-made
 Outernet Receiver.

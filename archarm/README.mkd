@@ -1,4 +1,4 @@
-# Installing ORx on Raspbian Pi with Arch ARM
+# Installing ORx on Raspberry Pi with Arch ARM
 
 This document describes the prerequisites and steps for creating a home-made
 Outernet Receiver.
