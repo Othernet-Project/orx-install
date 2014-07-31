@@ -253,7 +253,7 @@ respawn
 
 post-stop exec sleep 5
 
-exec /usr/sbin/dhcp -cf "$DHCPCFG" $WLAN
+exec /usr/sbin/dhcpd -f -4 -q $WLAN
 EOF
     chmod -x "$DHCP_INIT"
 fi
