@@ -254,12 +254,12 @@ EOF
 cat > "$DNSSRV" <<EOF
 [Unit]
 Description=DNS spoofing on %i
-Wants=network.target
-After=network.target
+Wants=hostapd
+After=hostapd
 
 [Service]
 ExecStart=/usr/bin/dnsspoof -i %i -f "$DNSCFG"
-RestartSec=10
+RestartSec=5
 Restart=on-failure
 
 [Install]
