@@ -260,7 +260,7 @@ After=hostapd
 [Service]
 ExecStart=/usr/bin/dnsspoof -i %i -f "$DNSCFG"
 RestartSec=5
-Restart=on-failure
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
