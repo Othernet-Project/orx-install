@@ -19,8 +19,8 @@ The following distributions are supported by the scripts in this repository:
 Following DVB-S/S2 tuners have been tested with above systems:
 
 - PCTV 460e (USB)
-- PCTV 461e (USB)
-- Geniatech HDStar TV box (USB)
+- PCTV 461e (USB, only on Arch Linux ARM with kernel >= 3.14)
+- Geniatech HDStar TV box (USB, only gen2)
 
 For access point setup, following Wi-Fi dongles have been tested:
 
@@ -53,6 +53,14 @@ Aug 02 01:17:20 alarmpi kernel: i2c i2c-3: m88ds3103: i2c rd failed=-19 reg=d1 l
 
 Currently, the only solution is to hard-restart the device by unplugging and
 replugging the power.
+
+### Hotspot with Edimax dongle may cause wired network to not function
+
+Cause is still undetermined.
+
+### Only Geniatech HDStar gen2 works
+
+TODO: How to tell the difference before buying?
 
 ## Reporting bugs
 

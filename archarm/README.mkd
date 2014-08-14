@@ -188,7 +188,7 @@ access point, the SSID and password, and so on.
 
 - PCTV 460e
 - PCTV 461e (requires kernel newer than v3.14)
-- Geniatech HDStar TV box
+- Geniatech HDStar TV box (only gen2 model)
 
 ## Supported USB Wi-Fi dongles
 
