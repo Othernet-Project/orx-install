@@ -118,14 +118,6 @@ checkiw() {
         > /dev/null && echo $YES || echo $NO
 }
 
-# checkdriver()
-#
-# Check if interface uses supported driver. Returns $NO or $YES.
-#
-checkdriver() {
-    lsmod | grep cfg80211 | grep ath > /dev/null && echo $YES || echo $NO
-}
-
 # backup()
 #
 # Back up a file by copying it to a path with '.old' suffix and echo about it
@@ -152,12 +144,6 @@ echo "OK"
 section "Wi-Fi interface with AP mode support"
 if [[ $(checkiw) == $NO ]]; then
     warn_and_die "Wireless interface does not support AP mode"
-fi
-echo "OK"
-
-section "Driver support... "
-if [[ $(checkdriver) == $NO ]]; then
-    warn_and_die "Please use a device that works with cfg80211 driver."
 fi
 echo "OK"
 
