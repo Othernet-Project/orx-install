@@ -25,6 +25,11 @@ Following DVB-S/S2 tuners have been tested with above systems:
 For access point setup, following Wi-Fi dongles have been tested:
 
 - TP-Link TL-WN722N (Atheros)
+- Edimax EW-7811UN (Realtek)
+
+Wi-Fi dongles currently not working:
+
+- Ralink RT5370
 
 ## Howto
 
