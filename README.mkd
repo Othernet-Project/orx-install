@@ -19,7 +19,7 @@ The following distributions are supported by the scripts in this repository:
 Following DVB-S/S2 tuners have been tested with above systems:
 
 - PCTV 460e (USB)
-- PCTV 461e (USB, only on Arch Linux ARM with kernel >= 3.14)
+- PCTV 461e (USB, only on Arch Linux ARM with kernel >= 3.16)
 - Geniatech HDStar TV box (USB, only gen2)
 
 For access point setup, following Wi-Fi dongles have been tested:
@@ -37,22 +37,10 @@ Please read the `README.mkd` files in each of the distribution directories.
 
 ## Known issues
 
-The following usses are confirmed and bug reports have already been filed.
-
-### PCTV 461e freezes system after tuning in (Arch Linux ARM)
-
-After tuning into a transponder, the em28178 driver used by PCTV 461e may cause
-the system to become unresponsive (see 
-[issue #23](https://github.com/Outernet-Project/orx-install/issues/23)). The 
-logs (`journalctl`) may contain entries that look like this:
-
-```
-Aug 02 01:17:20 alarmpi kernel: em28178 #0: writing to i2c device at 0xd0 failed (error=-19)
-Aug 02 01:17:20 alarmpi kernel: i2c i2c-3: m88ds3103: i2c rd failed=-19 reg=d1 len=1
-```
-
-Currently, the only solution is to hard-restart the device by unplugging and
-replugging the power.
+The following usses are confirmed and bug reports have already been filed. Also
+look at the [issue
+tracker](https://github.com/Outernet-Project/orx-install/issues) for more
+information.
 
 ### Hotspot with Edimax dongle may cause wired network to not function
 
