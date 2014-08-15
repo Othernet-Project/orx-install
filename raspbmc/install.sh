@@ -21,7 +21,7 @@
 set -e
 
 # Constants
-RELEASE=0.1a3
+RELEASE=0.1a4
 ONDD_RELEASE="0.1.0-0"
 NAME=librarian
 ROOT=0
@@ -42,10 +42,7 @@ MKD="mkdir -p"
 PYTHON=/usr/bin/python3
 
 # URLS and locations
-TARS="https://github.com/Outernet-Project/$NAME/archive/"
-DEBS="http://outernet-project.github.io/orx-install"
-EXT=".tar.gz"
-TARBALL="v${RELEASE}${EXT}"
+PKGS="http://outernet-project.github.io/orx-install"
 SRCDIR="/opt/$NAME"
 SPOOLDIR=/var/spool/downloads/content
 SRVDIR=/srv/zipballs
@@ -202,6 +199,7 @@ section "Installing packages"
 do_or_fail apt-get update
 DEBIAN_FRONTEND=noninteractive do_or_fail apt-get -y --force-yes install \
     python3.4 python3.4-dev python3-setuptools
+do_or_fail $EI pip
 echo "DONE"
 
 ###############################################################################
@@ -223,7 +221,7 @@ echo "DONE"
 
 section "Installing Outernet Data Delivery agent"
 do_or_fail wget --directory-prefix "$TMPDIR" \
-    "$DEBS/ondd_${ONDD_RELEASE}_armhf.deb"
+    "$PKGS/ondd_${ONDD_RELEASE}_armhf.deb"
 do_or_fail dpkg -i "$TMPDIR/ondd_${ONDD_RELEASE}_armhf.deb"
 do_or_pass rm "$TMPDIR/ondd_${ONDD_RELEASE}_armhf.deb"
 echo "DONE"
@@ -234,16 +232,10 @@ echo "DONE"
 
 # Obtain and unpack the Librarian source
 section "Installing Librarian"
-do_or_pass rm "$TMPDIR/$TARBALL" # Make sure there aren't any old ones
-do_or_fail $WGET --directory-prefix "$TMPDIR" "${TARS}${TARBALL}"
-do_or_fail $UNPACK "$TMPDIR/$TARBALL" -C /opt 
-do_or_pass rm "$SRCDIR" # For some reason `ln -f` doesn't work, so we remove first
-do_or_fail ln -s "${SRCDIR}-${RELEASE}" "$SRCDIR"
-do_or_pass rm "$TMPDIR/$TARBALL" # Remove tarball, since it's no longer needed
-# Install python dependencies globally
-do_or_fail $EI pip
-do_or_fail $PIP install -r "$SRCDIR/conf/requirements.txt"
-# Create paths necessary for the software to run
+do_or_fail $PIP install "$PKGS/$NAME-${RELEASE}.tar.gz"
+echo "DONE"
+
+section "Creating necessary directories"
 do_or_fail $MKD "$SPOOLDIR"
 do_or_fail $MKD "$SRVDIR"
 echo "DONE"
@@ -261,9 +253,7 @@ start on custom-network-done
 stop on shutdown
 respawn
 
-script
-PYTHONPATH=$SRCDIR python3 "$SRCDIR/$NAME/app.py"
-end script
+exec $PYTHON -m librarian.app
 EOF
 echo "DONE"
 

@@ -213,12 +213,12 @@ fi
 ###############################################################################
 
 section "Installing Librarian"
-do_or_pass pip install "$PKGS/$NAME-${RELEASE}.tar.gz"
+do_or_pass $PIP install "$PKGS/$NAME-${RELEASE}.tar.gz"
 echo "DONE"
 
 section "Creating necessary directories"
 do_or_fail $MKD "$SPOOLDIR"
-do_or_fail $MKD "$SRVDIR" >> $LOG 2>&1
+do_or_fail $MKD "$SRVDIR"
 echo "DONE"
 
 section "Creating $NAME systemd unit"
