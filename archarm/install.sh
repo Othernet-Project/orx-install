@@ -21,7 +21,7 @@
 set -e
 
 # Constants
-RELEASE=0.1a3
+RELEASE=0.1a4
 ONDD_RELEASE="0.1.0-3"
 NAME=librarian
 ROOT=0
@@ -30,7 +30,6 @@ YES=0
 NO=1
 
 # URLS and locations
-TARS="https://github.com/Outernet-Project/$NAME/archive/"
 PKGS="http://outernet-project.github.io/orx-install"
 FWS="https://github.com/OpenELEC/dvb-firmware/raw/master/firmware"
 EXT=".tar.gz"
@@ -214,29 +213,12 @@ fi
 ###############################################################################
 
 section "Installing Librarian"
-do_or_pass rm "$TMPDIR/$TARBALL" # Make sure there isn't any old one
-do_or_fail $WGET --directory-prefix "$TMPDIR" "${TARS}${TARBALL}"
-do_or_fail $UNPACK "$TMPDIR/$TARBALL" -C "$OPTDIR"
-do_or_pass rm "$SRCDIR" # for some reason `ln -f` doesn't work, so we remove
-do_or_fail ln -s "${SRCDIR}-${RELEASE}" "$SRCDIR"
-do_or_fail rm "$TMPDIR/$TARBALL" # Remove tarball, no longer needed
-echo "DONE"
-
-section "Installing Python packages"
-do_or_fail $PIP install -r "$SRCDIR/conf/requirements.txt"
+do_or_pass pip install "$PKGS/$NAME-${RELEASE}.tar.gz"
 echo "DONE"
 
 section "Creating necessary directories"
 do_or_fail $MKD "$SPOOLDIR"
 do_or_fail $MKD "$SRVDIR" >> $LOG 2>&1
-echo "DONE"
-
-section "Creating $NAME startup script"
-cat > "$BINDIR/$NAME" <<EOF
-#!/usr/bin/bash
-PYTHONPATH="$SRCDIR" $PYTHON "$SRCDIR/$NAME/app.py"
-EOF
-do_or_fail chmod +x "$BINDIR/$NAME"
 echo "DONE"
 
 section "Creating $NAME systemd unit"
@@ -246,7 +228,7 @@ Description=$NAME service
 After=network.target
 
 [Service]
-ExecStart=$BINDIR/$NAME
+ExecStart=/usr/bin/python -m '${NAME}.app'
 Restart=always
 RestartSec=5
 
