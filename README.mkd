@@ -42,6 +42,24 @@ look at the [issue
 tracker](https://github.com/Outernet-Project/orx-install/issues) for more
 information.
 
+### PCTV 461e not appearing in TVHeadend on Raspberry Pi model B+
+
+Raspberry Pi B+ may have issues with powering the PCTV 461e via its USB hub.
+Using an externally powered (self-powered) USB hub seems to solve this. You can
+detect whether you have this particular issue by looking at your system log and
+checking whether it contains the following item:
+
+    usb 1-1-port2: over-current change
+
+You can do this by unplugging the tuner, then plug it back in, and then run the
+following command on your Raspberry Pi:
+
+    dmesg | tail | grep "over-current change"
+
+If this returns a line similar to the example above, it means you probably need
+a powered USB hub. This has nothing to do with the PCTV's own external power
+adaptor which powers the LNB. 
+
 ### Hotspot with Edimax dongle may cause wired network to not function
 
 Cause is still undetermined.
