@@ -21,7 +21,7 @@
 set -e
 
 # Constants
-RELEASE=0.1a5
+RELEASE=0.1a5.1
 ONDD_RELEASE="0.1.0-3"
 NAME=librarian
 ROOT=0
