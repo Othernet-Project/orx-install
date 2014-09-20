@@ -7,75 +7,104 @@
         <link rel="stylesheet" href="default.css">
     </head>
     <body>
-        <h1 class="center"><img src="orx.png" alt="ORx resources"></h1>
+        <header>
+            <div class="inner">
+                <p class="logo"><img src="orx.png" alt="ORx resources"></p>
+                <a class="button-large" href="https://github.com/Outernet-Project/orx-install">GitHub repository</a>
+            </div>
+        </header>
 
-        <p>
-        For ORx scripts, visit 
-        <a href="https://github.com/Outernet-Project/orx-install">the GitHub repository</a>.
-        </p>
+        <section class="intro">
+            <div class="inner">
+                <h1>Build an Outernet receiver from scratch</h1>
 
-        <p>
-        This page contains links to resources that are used by the script.
-        These include binaries and other non-source components required for the
-        build that cannot be included in the source repository.
-        </p>
+                <p>
+                This page contains links to resources that are used by the
+                script.  These include binaries and other non-source components
+                required for the build that cannot be included in the source
+                repository.
+                </p>
 
-        <h2>Librarian</h2>
+                <p>
+                To get started, follow the instructions for your OS of choice.
+                </p>
 
-        <p>
-        Librarian is the archive manager that runs on ORx and provides a 
-        web-based user interface for managing the archive. Below are the Python
-        packages for the Librarian. They are platform independent. 
-        Librarian requires Python &gt;= 3.3.
-        </p>
+                <p>
+                <a class="button-large button-white" href="https://github.com/Outernet-Project/orx-install/blob/master/archarm/README.mkd">Arch Linux ARM</a>
+                <a class="button-large button-white" href="https://github.com/Outernet-Project/orx-install/blob/master/raspbian/README.mkd">Raspbian</a>
+                <a class="button-large button-white" href="https://github.com/Outernet-Project/orx-install/blob/master/raspbmc/README.mkd">RaspBMC</a>
+                </p>
+            </div>
+        </section>
 
-        <p>
-        Librarian is licensed under <a href="https://raw.githubusercontent.com/Outernet-Project/orx-install/master/COPYING">GNU GPL v3</a>.
-        </p>
+        <div class="packages">
+            <section class="librarian">
+                <div class="inner">
+                    <h2>Librarian</h2>
 
-        <ul>
-            <li><a href="librarian-0.1a5.1.tar.gz">librarian v0.1a5.1 (tar.gz)</a></li>
-            <li><a href="librarian-0.1a5.1.zip">librarian v0.1a5.1 (zip)</a></li>
-        </ul>
+                    <p>
+                    Librarian is the archive manager that runs on ORx and provides a 
+                    web-based user interface for managing the archive. Below are the Python
+                    packages for the Librarian. They are platform independent. 
+                    Librarian requires Python &gt;= 3.3.
+                    </p>
 
-        <h2>Outernet Data Delivery agent packages</h2>
+                    <p>
+                    Librarian is licensed under <a href="https://raw.githubusercontent.com/Outernet-Project/orx-install/master/COPYING">GNU GPL v3</a>.
+                    </p>
 
-        <p>
-        The following are binary-only packages for ONDD (Outernet Data Delivery
-        agent). We currently only provide builds for ARMv6 architecture
-        (Raspberry Pi).
-        </p>
+                    <ul>
+                        <li><a href="librarian-0.1a5.1.tar.gz">librarian v0.1a5.1 (tar.gz)</a></li>
+                        <li><a href="librarian-0.1a5.1.zip">librarian v0.1a5.1 (zip)</a></li>
+                    </ul>
+                </div>
+            </section>
 
-        <p>
-        ONDD is licensed to you under the following terms:
-        </p>
+            <section class="ondd">
+                <div class="inner">
+                    <h2>Outernet Data Delivery agent</h2>
 
-        <pre>
-        This software is provided as-is with no warranty and is for use
-        exclusively with the Outernet satellite datacast. This software is
-        intended for end user applications and their evaluation. Due to
-        licensing agreements with third parties, commercial use of the software
-        is strictly prohibited. 
-        </pre>
+                    <p>
+                    The following are binary-only packages for ONDD (Outernet Data Delivery
+                    agent). We currently only provide builds for ARMv6 architecture
+                    (Raspberry Pi).
+                    </p>
 
-        <p>
-        You must agree to these terms before you install these packages.
-        </p>
+                    <p>
+                    ONDD is licensed to you under the following terms:
+                    </p>
 
-        <h3>Raspbian</h3>
+                    <pre>
+                    This software is provided as-is with no warranty and is for use
+                    exclusively with the Outernet satellite datacast. This software is
+                    intended for end user applications and their evaluation. Due to
+                    licensing agreements with third parties, commercial use of the software
+                    is strictly prohibited. 
+                    </pre>
 
-        <ul>
-            <li><a href="ondd_0.1.0-0_armhf.deb">ondd_0.1.0-0_armhf.deb</a> (528 KiB)</li>
-        </ul>
+                    <p>
+                    You must agree to these terms before you install these packages.
+                    </p>
 
-        <h3>Arch Linux ARM</h3>
+                    <h3>Raspbian</h3>
 
-        <ul>
-            <li><a href="ondd-0.1.0-3-armv6h.pkg.tar.xz">ondd-0.1.0-3-armv6h.pkg.tar.xz</a> (54 KiB)</li>
-        </ul>
+                    <ul>
+                        <li><a href="ondd_0.1.0-0_armhf.deb">ondd_0.1.0-0_armhf.deb</a> (528 KiB)</li>
+                    </ul>
 
-        <p class="center logo">
-        <a href="https://www.outernet.is/"><img src="logo.png"></a>
-        </p>
+                    <h3>Arch Linux ARM</h3>
+
+                    <ul>
+                        <li><a href="ondd-0.1.0-3-armv6h.pkg.tar.xz">ondd-0.1.0-3-armv6h.pkg.tar.xz</a> (54 KiB)</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>
+            <a href="https://www.outernet.is/"><img src="outernet.png"></a>
+            </p>
+        </footer>
     </body>
 </html>

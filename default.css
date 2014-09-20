@@ -1,78 +1,353 @@
+@font-face {
+  font-family: 'Brandon Grotesque';
+  font-weight: bold;
+  font-style: normal;
+  src: url("brandon/2BA99B_0_0.eot");
+  src: url("brandon/2BA99B_0_0.eot?#iefix") format("embedded-opentype"), url("brandon/2BA99B_0_0.woff") format("woff"), url("brandon/2BA99B_0_0.ttf") format("truetype"), url("brandon/2BA99B_0_0.svg#wf") format("svg");
+}
+
+@font-face {
+  font-family: 'Brandon Grotesque';
+  font-weight: normal;
+  font-style: italic;
+  src: url("brandon/2BA99B_1_0.eot");
+  src: url("brandon/2BA99B_1_0.eot?#iefix") format("embedded-opentype"), url("brandon/2BA99B_1_0.woff") format("woff"), url("brandon/2BA99B_1_0.ttf") format("truetype"), url("brandon/2BA99B_1_0.svg#wf") format("svg");
+}
+
+@font-face {
+  font-family: 'Brandon Grotesque';
+  font-weight: normal;
+  font-style: normal;
+  src: url("brandon/2BA99B_2_0.eot");
+  src: url("brandon/2BA99B_2_0.eot?#iefix") format("embedded-opentype"), url("brandon/2BA99B_2_0.woff") format("woff"), url("brandon/2BA99B_2_0.ttf") format("truetype"), url("brandon/2BA99B_2_0.svg#wf") format("svg");
+}
+
+@font-face {
+  font-family: 'Brandon Text';
+  font-weight: normal;
+  font-style: italic;
+  src: url("brandon/2C0A51_0_0.eot");
+  src: url("brandon/2C0A51_0_0.eot?#iefix") format("embedded-opentype"), url("brandon/2C0A51_0_0.woff") format("woff"), url("brandon/2C0A51_0_0.ttf") format("truetype"), url("brandon/2C0A51_0_0.svg#wf") format("svg");
+}
+
+@font-face {
+  font-family: 'Brandon Text';
+  font-weight: normal;
+  font-style: normal;
+  src: url("brandon/2C0A51_1_0.eot");
+  src: url("brandon/2C0A51_1_0.eot?#iefix") format("embedded-opentype"), url("brandon/2C0A51_1_0.woff") format("woff"), url("brandon/2C0A51_1_0.ttf") format("truetype"), url("brandon/2C0A51_1_0.svg#wf") format("svg");
+}
+
 * {
     padding: 0;
     margin: 0;
-    line-height: 140%;
-    font-family: Arial, Helvetica, sans-serif;
+    line-height: 150%;
+    font-family: 'Brandon Text', Arial, Helvetica, sans-serif;
     font-size: 100%;
     font-style: normal;
     font-weight: normal;
 }
 
 html, body {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 body {
-    color: #1F354B;
-    background: white url('background.png') repeat;
+    background: #3b3b3b;
+    color: #212121;
+    padding-top: 80px;
+}
+
+.inner {
+    position: relative;
+    padding: 0 1em;
 }
 
 a {
     color: #298bec;
 }
 
-h1 {
-    background: #298bec;
-    color: white;
-    padding: 16px;
-    margin-bottom: 2em;
-}
-
-h2, h3, p, ul, pre {
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-h2 {
-    padding: 16px;
-    font-size: 150%;
-    color: #298bec;
-}
-
-h3 {
-    padding: 16px;
-    font-weight: bold;
-}
-
-p, ul {
-    padding: 0 1em;
-    margin-bottom: 1em;
-}
-
-li {
-    margin-left: 2em;
-}
-
-.center {
-    text-align: center;
-}
-
-pre {
-    font-family: monospace;
-}
-
-em {
-    font-style: italic;
-}
-
-strong {
-    font-weight: bold;
-}
-
-img {
-    border: none;
+header {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: white;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.11);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.11);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.11);
 }
 
 .logo {
-    margin: 4em auto 4em;
+    display: inline-block;
+    color: white;
+    padding: 1em 0;
+}
+
+header a {
+    display: block;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+}
+
+button, a.button {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 2px solid transparent;
+  vertical-align: middle;
+  display: inline-block;
+  background-color: #00a2db;
+  color: white;
+  padding: 0.3em 1.4em 0.4em;
+  font-family: "Brandon Text", Arial, Helvetica, sans-serif;
+  font-size: 90%;
+  line-height: 100%;
+  text-decoration: none;
+  -webkit-transition: all, 0.2s;
+  -moz-transition: all, 0.2s;
+  -o-transition: all, 0.2s;
+  transition: all, 0.2s;
+  height: 33px;
+}
+
+button:hover, a.button:hover {
+  background-color: #003e54;
+  color: white;
+  border: 2px solid transparent;
+}
+
+button:visited, a.button:visited {
+  color: white;
+}
+
+button.large, a.button-large {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 2px solid transparent;
+  vertical-align: middle;
+  display: inline-block;
+  background-color: #00a2db;
+  color: white;
+  padding: 0.3em 1.4em 0.4em;
+  font-family: "Brandon Text", Arial, Helvetica, sans-serif;
+  font-size: 90%;
+  line-height: 100%;
+  text-decoration: none;
+  -webkit-transition: all, 0.2s;
+  -moz-transition: all, 0.2s;
+  -o-transition: all, 0.2s;
+  transition: all, 0.2s;
+  height: 33px;
+  padding: 0.5em 3em 0.8em;
+  height: 45px;
+  font-size: 100%;
+}
+
+button.large:hover, a.button-large:hover {
+  background-color: #003e54;
+  color: white;
+  border: 2px solid transparent;
+}
+
+button.large:visited, a.button-large:visited {
+  color: white;
+}
+
+button.small, a.button-small {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 2px solid transparent;
+  vertical-align: middle;
+  display: inline-block;
+  background-color: #00a2db;
+  color: white;
+  padding: 0.3em 1.4em 0.4em;
+  font-family: "Brandon Text", Arial, Helvetica, sans-serif;
+  font-size: 90%;
+  line-height: 100%;
+  text-decoration: none;
+  -webkit-transition: all, 0.2s;
+  -moz-transition: all, 0.2s;
+  -o-transition: all, 0.2s;
+  transition: all, 0.2s;
+  height: 33px;
+  padding: 0.1em 0.5em 0.2em;
+  height: 24px;
+  font-size: 90%;
+  margin-top: -0.2em;
+  border-width: 1px;
+}
+
+button.small:hover, a.button-small:hover {
+  background-color: #003e54;
+  color: white;
+  border: 2px solid transparent;
+}
+
+button.small:visited, a.button-small:visited {
+  color: white;
+}
+
+button, a.button {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 2px solid transparent;
+  vertical-align: middle;
+  display: inline-block;
+  background-color: #00a2db;
+  color: white;
+  padding: 0.3em 1.4em 0.4em;
+  font-family: "Brandon Text", Arial, Helvetica, sans-serif;
+  font-size: 90%;
+  line-height: 100%;
+  text-decoration: none;
+  -webkit-transition: all, 0.2s;
+  -moz-transition: all, 0.2s;
+  -o-transition: all, 0.2s;
+  transition: all, 0.2s;
+  height: 33px;
+}
+
+a.button-white {
+  border: 2px solid white;
+  color: white;
+  background-color: transparent;
+}
+
+a.button-white:hover {
+  border-color: transparent;
+  background-color: white;
+  color: #003e54;
+}
+
+h1, h2, h3 {
+    font-family: "Brandon Grotesque", Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    font-size: 150%;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+h2 {
+    letter-spacing: 0.4em;
+    font-size: 90%;
+    font-weight: bold;
+    margin-bottom: 2em;
+    margin-top: 0.4em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+h3 {
+    font-size: 100%;
+    font-weight: bold;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+}
+
+p, ul {
+    margin-bottom: 1em;
+}
+
+a {
+  color: #00a2db;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #212121;
+}
+
+ul {
+    margin-left: 2em;
+}
+
+section .inner {
+    padding: 2em 2em;
+}
+
+.intro {
+    background: #00799e url('raspberry.jpg') no-repeat center center;
+    color: white;
+    text-align: center;
+}
+
+.intro .inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4em 0;
+}
+
+.intro .button-large {
+    margin: 0 1em;
+}
+
+.packages {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.librarian,
+.ondd {
+    float: left;
+    padding-bottom: 5000px;
+    margin-bottom: -5000px;
+}
+
+.librarian {
+    width: 50%;
+    background: white;
+}
+
+.ondd {
+    width: 50%;
+    background: #212121;
+    color: white;
+}
+
+.ondd a {
+    color: white;
+    text-decoration: underline;
+}
+
+footer {
+  text-align: center;
+  padding: 1em 0 2em;
+  clear: both;
+  background: #3b3b3b;
 }
