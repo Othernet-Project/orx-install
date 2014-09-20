@@ -175,6 +175,7 @@ echo "OK"
 
 section "Installing packages"
 do_or_fail $PACMAN -Sqy
+do_or_fail $PACMAN -Squ
 do_or_fail $PACMAN -Sq --needed python python-pip git openssl avahi python2 \
     base-devel
 echo "DONE"
