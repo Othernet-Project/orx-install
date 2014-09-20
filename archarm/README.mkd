@@ -51,6 +51,36 @@ Run the following commands:
     sed -i 's|^# Server|Server|' /etc/pacman.d/mirrorlist.old
     rankmirrors /etc/pacman.d/mirrorlist.old > /etc/pacman.d/mirrorlist
 
+## Set system date, time, and timezone
+
+For the receiver to display date and time information, it is important to set
+your date, time and timezone correctly. To set the date and time, use the
+following command:
+
+    timedatectl set-time "YYYY-MM-DD HH:MM"
+
+Replace "YYYY" with correct year, "MM" with zero-padded month (e.g., 09 for
+September), "DD" with zero-padded day (e.g., 03 for 3rd), and "HH:MM" with
+24-hour format time.
+
+To set the timezone, use the following command:
+
+    timedatectl set-timezone TIMEZONE
+
+"TIMEZONE" should be replace by an appropriate time zone name. To get a list of
+time zones, you can use this command:
+
+    timedatectl list-timezones
+
+You can use the `grep` command to filter the timezones. For example, if
+you want to know what the timezone for Chicago, you can type:
+
+    timedatectl list-timezones | grep -i chicago
+
+The above command returns "America/Chicago", which you can then use like so:
+
+    timedatectl set-timezone America/Chicago
+
 ## Install Outernet software and TVHeadend
 
 To install the base software for Outernet Receiver, you can use our install
