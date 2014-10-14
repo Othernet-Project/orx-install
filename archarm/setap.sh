@@ -201,6 +201,8 @@ wpa_passphrase=$PSK
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
 rsn_pairwise=CCMP
+ieee8021x=0
+eap_server=0
 EOF
 echo "DONE"
 
