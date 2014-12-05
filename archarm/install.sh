@@ -21,7 +21,7 @@
 set -e
 
 # Constants
-RELEASE=0.1a6.1
+RELEASE=0.1b2
 ONDD_RELEASE="0.1.0-3"
 NAME=librarian
 ROOT=0
@@ -51,22 +51,30 @@ FIRMWARES=(dvb-fe-ds3000 dvb-fe-tda10071 dvb-demod-m88ds3103)
 # NOTE: we use the `--no-check-certificate` because wget on RaspBMC thinks the
 # GitHub's SSL cert is invalid when downloading the tarball.
 #
-PIP="pip"
+PIP="pip2"
 WGET="wget -o $LOG --quiet --no-check-certificate"
 UNPACK="tar xzf"
 MKD="mkdir -p"
-PYTHON=/usr/bin/python
+PYTHON=/usr/bin/python2
 PACMAN="pacman --noconfirm --noprogressbar"
 MAKEPKG="makepkg --noconfirm"
 
-# checknet(URL)
+# checknet()
 # 
-# Performs wget dry-run on provided URL to see if it works. Echoes 0 if 
-# everything is OK, or non-0 otherwise.
+# Pings example.com and echoes 0 if it can be reached, 1 otherwise.
 #
 checknet() {
-    $WGET -q --tries=10 --timeout=20 --spider "$1" || echo 1
-    echo $?
+    ping -c 1 github.com > /dev/null && echo 0 || echo 1
+}
+
+# check80()
+#
+# Checks if port 80 is taken on localhost and echoes 0 if it isn't, 1 otherwise
+#
+check80() {
+    exec 6<>/dev/tcp/127.0.0.1/80 >> /dev/null 2>&1 && echo "1" || echo "0"
+    exec 6>&- # close output connection
+    exec 6<&- # close input connection
 }
 
 # warn_and_die(message)
@@ -158,13 +166,13 @@ fi
 echo "OK"
 
 section "Internet connection"
-if [[ $(checknet "http://example.com/") != $OK ]]; then
+if [[ $(checknet) != $OK ]]; then
     warn_and_die "Internet connection is required."
 fi
 echo "OK"
 
 section "Port 80 free"
-if [[ $(checknet "127.0.0.1:80") == $OK ]]; then
+if [[ $(check80) != $OK ]]; then
     warn_and_die "Port 80 is taken. Disable the webservers or stop $NAME."
 fi
 echo "OK"
@@ -176,8 +184,8 @@ echo "OK"
 section "Installing packages"
 do_or_fail $PACMAN -Sqy
 do_or_fail $PACMAN -Squ
-do_or_fail $PACMAN -Sq --needed python python-pip git openssl avahi python2 \
-    base-devel
+do_or_fail $PACMAN -Sq --needed python2 python2-pip git openssl avahi libev \
+    base-devel wget
 echo "DONE"
 
 ###############################################################################
@@ -214,7 +222,13 @@ fi
 ###############################################################################
 
 section "Installing Librarian"
-do_or_pass $PIP install "$PKGS/$NAME-${RELEASE}.tar.gz"
+if [ -f "$NAME-${RELEASE}.tar.gz" ]; then
+    do_or_pass $PIP install "$NAME-${RELEASE}.tar.gz"
+else
+    do_or_pass $PIP install "$PKGS/$NAME-${RELEASE}.tar.gz"
+fi
+# Verify install was successful
+do_or_fail $PYTHON -c "import librarian"
 echo "DONE"
 
 section "Creating necessary directories"
@@ -229,7 +243,7 @@ Description=$NAME service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python -m '${NAME}.app'
+ExecStart=$PYTHON -m '${NAME}.app'
 Restart=always
 RestartSec=5
 
