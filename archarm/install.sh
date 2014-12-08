@@ -72,6 +72,7 @@ checknet() {
 # Checks if port 80 is taken on localhost and echoes 0 if it isn't, 1 otherwise
 #
 check80() {
+    # FIXME: Silence the next line or redirect it to logs
     exec 6<>/dev/tcp/127.0.0.1/80 >> /dev/null 2>&1 && echo "1" || echo "0"
     exec 6>&- # close output connection
     exec 6<&- # close input connection
@@ -148,6 +149,30 @@ ensure_service() {
         do_or_fail systemctl restart "$1"
     fi
 }
+
+###############################################################################
+# License
+###############################################################################
+
+cat <<EOF
+
+=======================================================
+Outernet Data Delivery agent End User License Agreement
+=======================================================
+
+Among other things, this script installs ONDD (Outernet Data Delivery agent) 
+which is licensed to you under the following conditions:
+
+This software is provided as-is with no warranty and is for use exclusively
+with the Outernet satellite datacast. This software is intended for end user
+applications and their evaluation. Due to licensing agreements with third
+parties, commercial use of the software is strictly prohibited. 
+
+YOU MUST AGREE TO THESE TERMS IF YOU CONTINUE.
+
+EOF
+read -p "Press any key to continue (CTRL+C to quit)..." -n 1
+echo ""
 
 ###############################################################################
 # Preflight check
