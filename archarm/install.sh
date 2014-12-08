@@ -184,6 +184,7 @@ echo "OK"
 section "Installing packages"
 do_or_fail $PACMAN -Sqy
 do_or_fail $PACMAN -Squ
+do_or_pass $PACMAN -R linux-raspberrypi
 do_or_fail $PACMAN -Sq --needed python2 python2-pip git openssl avahi libev \
     base-devel wget linux-raspberrypi-latest linux-raspberrypi-latest-headers
 echo "DONE"
