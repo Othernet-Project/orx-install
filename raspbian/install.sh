@@ -21,7 +21,7 @@
 set -e
 
 # Constants
-RELEASE=0.1a6.1
+RELEASE=0.1b2
 ONDD_RELEASE="0.1.0-0"
 NAME=librarian
 ROOT=0
@@ -34,7 +34,7 @@ NO=1
 # NOTE: we use the `--no-check-certificate` because wget on RaspBMC thinks the
 # GitHub's SSL cert is invalid when downloading the tarball.
 #
-EI="easy_install-3.4"
+EI="easy_install"
 PIP="pip2"
 WGET="wget --no-check-certificate"
 UNPACK="tar xzf"
@@ -212,7 +212,7 @@ echo "DONE"
 section "Installing packages"
 do_or_fail apt-get update
 DEBIAN_FRONTEND=noninteractive do_or_fail apt-get -y --force-yes install \
-    python python python-setuptools tvheadend
+    python python-dev python-setuptools tvheadend libev4 libev-dev
 do_or_fail $EI pip
 echo "DONE"
 
@@ -425,7 +425,7 @@ esac
 EOF
 echo "DONE"
 
-if ! grep "--noacl" "/etc/init.d/tvheadend" > /dev/null 2> "$LOG"; then
+if ! grep '--noacl' "/etc/init.d/tvheadend" > /dev/null 2> "$LOG"; then
     read -p "Do you wish to disable superuser for TVHeadend? [y/N] " -n 1 tvacl
     echo ""
     if [[ "$tvacl" == "Y" ]] || [[ "$tvacl" == "y" ]]; then
@@ -468,3 +468,4 @@ echo "DONE"
 touch "$LOCK"
 
 echo "Install logs can be found in '$LOG'."
+echo "Please reboot the system now."
