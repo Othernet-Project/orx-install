@@ -35,11 +35,11 @@ NO=1
 # GitHub's SSL cert is invalid when downloading the tarball.
 #
 EI="easy_install-3.4"
-PIP="pip"
+PIP="pip2"
 WGET="wget --no-check-certificate"
 UNPACK="tar xzf"
 MKD="mkdir -p"
-PYTHON=/usr/bin/python3
+PYTHON=/usr/bin/python
 
 # URLS and locations
 PKGS="http://outernet-project.github.io/orx-install"
@@ -56,14 +56,23 @@ LOG="install.log"
 
 FIRMWARES=(dvb-fe-ds3000 dvb-fe-tda10071 dvb-demod-m88ds3103)
 
-# checknet(URL)
+# checknet()
 # 
-# Performs wget dry-run on provided URL to see if it works. Echoes 0 if 
-# everything is OK, or non-0 otherwise.
+# Pings example.com and echoes 0 if it can be reached, 1 otherwise.
 #
 checknet() {
-    $WGET -q --tries=10 --timeout=20 --spider "$1" > /dev/null || echo $NO
-    echo $?
+    ping -c 1 github.com > /dev/null && echo 0 || echo 1
+}
+
+# check80()
+#
+# Checks if port 80 is taken on localhost and echoes 0 if it isn't, 1 otherwise
+#
+check80() {
+    # FIXME: Silence the next line or redirect it to logs
+    exec 6<>/dev/tcp/127.0.0.1/80 >> /dev/null 2>&1 && echo "1" || echo "0"
+    exec 6>&- # close output connection
+    exec 6<&- # close input connection
 }
 
 # warn_and_die(message)
@@ -174,13 +183,13 @@ fi
 echo "OK"
 
 section "Internet connection"
-if [[ $(checknet "http://example.com/") != $OK ]]; then
+if [[ $(checknet) != $OK ]]; then
     warn_and_die "Internet connection is required."
 fi
 echo "OK"
 
 section "Port 80 free"
-if [[ $(checknet "127.0.0.1:80") == $OK ]]; then
+if [[ $(check80) != $OK ]]; then
     warn_and_die "Port 80 is taken. Disable any webservers and try again."
 fi
 echo "OK"
@@ -189,14 +198,6 @@ echo "OK"
 # Packages
 ###############################################################################
 
-section "Adding additional repositories"
-if [[ $(is_in_sources jessie) == $NO ]]; then
-    # Adds Raspbian's jessie repositories to sources.list
-    cat > "$PKGLISTS/jessie.list" <<EOF
-deb http://archive.raspbian.org/raspbian jessie main contrib non-free
-deb-src http://archive.raspbian.org/raspbian jessie main contrib non-free
-EOF
-fi
 if [[ $(is_in_sources tvheadend.org) == $NO ]]; then
     cat > "$PKGLISTS/tvheadend.list" << EOF
 deb http://apt.tvheadend.org/stable wheezy main
@@ -211,7 +212,7 @@ echo "DONE"
 section "Installing packages"
 do_or_fail apt-get update
 DEBIAN_FRONTEND=noninteractive do_or_fail apt-get -y --force-yes install \
-    python3.4 python3.4-dev python3-setuptools tvheadend
+    python python python-setuptools tvheadend
 do_or_fail $EI pip
 echo "DONE"
 
@@ -243,9 +244,14 @@ echo "DONE"
 # Librarian
 ###############################################################################
 
-# Obtain and unpack the Librarian source
 section "Installing Librarian"
-do_or_fail $PIP install "$PKGS/$NAME-${RELEASE}.tar.gz"
+if [ -f "$NAME-${RELEASE}.tar.gz" ]; then
+    do_or_pass $PIP install "$NAME-${RELEASE}.tar.gz"
+else
+    do_or_pass $PIP install "$PKGS/$NAME-${RELEASE}.tar.gz"
+fi
+# Verify install was successful
+do_or_fail $PYTHON -c "import librarian"
 echo "DONE"
 
 # Create paths necessary for the software to run
@@ -289,7 +295,7 @@ NAME="$NAME"
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 LOGFILE=/var/log/${NAME}.log
 USER=root
-DAEMON="/usr/bin/python3 -m ${NAME}.app"
+DAEMON="$PYTHON -m ${NAME}.app"
 
 # Load init settings and LSB functions
 . /lib/init/vars.sh
