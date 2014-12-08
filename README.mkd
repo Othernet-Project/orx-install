@@ -14,7 +14,6 @@ The following distributions are supported by the scripts in this repository:
 
 - [Raspbian](raspbian) (Raspberry Pi, ARM v6)
 - [Arch Linux ARM](archarm) (Raspberry Pi, ARM v6)
-- [RaspBMC](raspbmc) (Raspberry Pi, ARM v6)
 
 Following DVB-S/S2 tuners have been tested with above systems:
 
@@ -55,6 +54,7 @@ You can do this by unplugging the tuner, then plug it back in, and then run the
 following command on your Raspberry Pi:
 
     dmesg | tail | grep "over-current change"
+-dev
 
 If this returns a line similar to the example above, it means you probably need
 a powered USB hub. This has nothing to do with the PCTV's own external power

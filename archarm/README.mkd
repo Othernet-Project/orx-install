@@ -23,15 +23,29 @@ You will need the following:
 
 See *Transponders* section for information on where you should point your dish.
 
-## Prepare for software install
+## Installing using Outernet-provided image file
+
+For this method, you will need an 8GB SD card. Smaller cards will be supported
+in future.
+
+TODO
+
+## Install using ORx scripts
+
+This method uses normal procedure for installing an operating system on your
+Raspberry Pi, and then uses scripts to convert the system into Outernet
+receiver.
+
+### Prepare for software install
 
 This section is intended for people who are not familiar with Raspberry Pi.
 Experienced users may safely skip to next section.
 
-Format the SD card and unpack [NOOBS](http://www.raspberrypi.org/downloads/).
-Insert the card into the card slot on Raspberry Pi. Attach the display's HDMI
-cable and USB keyboard. Connect the Ethernet cable. Finally, connect the micro
-USB cable or AC adaptor.
+Format the SD card and unpack [NOOBS](http://www.raspberrypi.org/downloads/)
+(the install scripts are tested with NOOBS lite from the Raspberry Pi downloads
+page). Insert the card into the card slot on Raspberry Pi. Attach the
+display's HDMI cable and USB keyboard. Connect the Ethernet cable. Finally,
+connect the micro USB cable or AC adaptor.
 
 Once NOOBS boots up, it will display a choice of operating systems it can
 install. Mark Arch Linux ARM (use arrow keys to navigate and space to mark) and
@@ -51,7 +65,7 @@ Run the following commands:
     sed -i 's|^# Server|Server|' /etc/pacman.d/mirrorlist.old
     rankmirrors /etc/pacman.d/mirrorlist.old > /etc/pacman.d/mirrorlist
 
-## Set system date, time, and timezone
+### Set system date, time, and timezone
 
 For the receiver to display date and time information, it is important to set
 your date, time and timezone correctly. To set the date and time, use the
@@ -81,7 +95,7 @@ The above command returns "America/Chicago", which you can then use like so:
 
     timedatectl set-timezone America/Chicago
 
-## Install Outernet software and TVHeadend
+### Install Outernet software and TVHeadend
 
 To install the base software for Outernet Receiver, you can use our install
 script:
@@ -103,23 +117,12 @@ The script will do the following:
 You can troubleshoot problems during the install by looking at `install.log`
 file created in the same directory where you started the install script.
 
-## Upgrade the kernel
-
-For some DVB tuners, you may need a newer kernel. You can upgrade to the latest 
-version of the kernel by running:
-
-    pacman -Sy
-    pacman -Su
-    pacman -S linux-raspberrypi-latest linux-raspberrypi-latest-headers
-
-Answer Yes (press *y*) to all questions.
-
-## Attach the DVB-S/S2 tuner
+### Attach the DVB-S/S2 tuner
 
 Attach your DVB-S/S2 tuner to the USB port (you may need a USB hub depending on
 Raspberry Pi model).
 
-## Restart Raspberry Pi
+### Restart Raspberry Pi
 
 Restart Raspberry Pi. You can issue the reboot command, or simply unplug and
 plug back in the micro USB cable or AC adaptor.
@@ -184,7 +187,7 @@ There are many Wi-Fi dongles that can potentially be used for this purpose. Our
 scripts has only been tested with the devices listed in the *Supported USB
 Wi-Fi dongles* section.
 
-Get the script that matches your dongle's chipset:
+Get the script:
 
     wget https://raw.githubusercontent.com/Outernet-Project/orx-install/master/archarm/setap.sh
 
@@ -220,6 +223,8 @@ access point, the SSID and password, and so on.
 - PCTV 461e (requires kernel v3.16 and later)
 - Geniatech HDStar TV box (only gen2 model)
 
+Please report any working devices that are not included in this list.
+
 ## Supported USB Wi-Fi dongles
 
 - TP-Link TL-WN722N (Atheros)
@@ -231,5 +236,6 @@ These are the currently active transponders:
 
 - North America: Galaxy 19 (97.0°W) 12,177 V 23,000 3/4
 - Europe: HotBird (13.0°E) 11,470 V 27,500 5/6
-
+- Europe: IS-20 (68.5°E) 12,522 V 27,500 3/4
+- Africa: IS-20 (68.5°E) 12,522 V 27,500 3/4
 

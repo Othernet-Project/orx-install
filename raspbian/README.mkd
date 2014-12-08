@@ -23,15 +23,29 @@ You will need the following:
 
 See *Transponders* section for information on where you should point your dish.
 
-## Prepare for software install
+## Install using Outernet-provided image file
+
+For this method, you will need an 8GB SD card. Smaller cards will be supported
+in future.
+
+TODO
+
+## Install using ORx scripts
+
+This method uses normal procedure for installing an operating system on your
+Raspberry Pi, and then uses scripts to convert the system into Outernet
+receiver.
+
+### Prepare for software install
 
 This section is intended for people who are not familiar with Raspberry Pi.
 Experienced users may safely skip to next section.
 
-Format the SD card and unpack [NOOBS](http://www.raspberrypi.org/downloads/).
-Insert the card into the card slot on Raspberry Pi. Attach the display's HDMI
-cable and USB keyboard. Connect the Ethernet cable. Finally, connect the micro
-USB cable or AC adaptor.
+Format the SD card and unpack [NOOBS](http://www.raspberrypi.org/downloads/)
+(the install scripts are tested with NOOBS lite and Raspbian image from the
+Raspberry Pi downloads page). Insert the card into the card slot on Raspberry
+Pi. Attach the display's HDMI cable and USB keyboard. Connect the Ethernet
+cable. Finally, connect the micro USB cable or AC adaptor.
 
 Once NOOBS boots up, it will display a choice of operating systems it can
 install. Mark Raspbian (use arrow keys to navigate and space to mark) and
@@ -45,7 +59,7 @@ attached keyboard and display, or you can SSH into it. Use the username 'pi'
 and the password you have set (or default password of 'raspberry'). If you
 decide to SSH into it, you may reattach the keyboard and display to your PC.
 
-## Install Outernet software and TVHeadend
+### Install Outernet software and TVHeadend
 
 To install the base software for Outernet Receiver, you must first be root:
 
@@ -61,8 +75,8 @@ Alternatively, you can run the second command with `sudo`.
 The script will do the following:
 
 1. add jessie and tvheadend repositories to the list of package repositories
-1. installs necessary packages (python3.4 python3.4-dev python3-setuptools,
-   tvheadend)
+1. installs necessary packages (python python-dev python-setuptools,
+   tvheadend libev)
 1. installs firmwares for supported DVB-S/S2 tuners (see list below)
 1. installs Outernet Data Delivery agent package
 1. installs Outernet Librarian
@@ -79,7 +93,7 @@ account, setting up the superuser username and password, or leaving things
 unconfigured. If you choose to have a superuser account, you will use the
 username and password you specified to log into TVHeadend.
 
-## Upgrade the kernel
+### Upgrade the kernel
 
 Upgrading the kernel may be necessary for newer USB DVB-S/S2 tuners. This topic
 is outside the scope of this document. Generally, you have two options. You can
@@ -88,12 +102,12 @@ try using the
 tool, or [compile the kernel
 yourself](http://elinux.org/RPi_Kernel_Compilation).
 
-## Attach the DVB-S/S2 tuner
+### Attach the DVB-S/S2 tuner
 
 Attach your DVB-S/S2 tuner to the USB port (you may need a USB hub depending on
 Raspberry Pi model).
 
-## Restart Raspberry Pi
+### Restart Raspberry Pi
 
 Restart Raspberry Pi. You can issue the reboot command, or simply unplug and
 plug back in the micro USB cable or AC adaptor.
@@ -158,7 +172,7 @@ There are many Wi-Fi dongles that can potentially be used for this purpose. Our
 scripts has only been tested with the devices listed in the *Supported USB
 Wi-Fi dongles* section.
 
-Get the script that matches your dongle's chipset:
+Get the script:
 
     wget https://raw.githubusercontent.com/Outernet-Project/orx-install/master/raspbian/setap.sh
 
@@ -217,6 +231,8 @@ access point, the SSID and password, and so on.
 - PCTV 461e (requires kernel newer than v3.14)
 - Geniatech HDStar TV box (only gen2 model)
 
+Please report any working devices that are not included in this list.
+
 ## Supported USB Wi-Fi dongles
 
 - TP-Link TL-WN722N (Atheros)
@@ -228,5 +244,6 @@ These are the currently active transponders:
 
 - North America: Galaxy 19 (97.0°W) 12,177 V 23,000 3/4
 - Europe: HotBird (13.0°E) 11,470 V 27,500 5/6
-
+- Europe: IS-20 (68.5°E) 12,522 V 27,500 3/4
+- Africa: IS-20 (68.5°E) 12,522 V 27,500 3/4
 
