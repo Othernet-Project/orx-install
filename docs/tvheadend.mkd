@@ -3,6 +3,10 @@
 Currently, TVHeadend that is installed during the ORx installation is the most
 reliable way to tune into the Outernet signal (that we know of).
 
+Before you can tune in, you must point your dish. Dish-pointing is outside the
+scope of this document, but you may find
+[dishpointer.com](http://www.dishpointer.com/) useful.
+
 ## Accessing TVHeadend
 
 TVHeadend can be found at your receiver's IP address on port 9981. For example,
