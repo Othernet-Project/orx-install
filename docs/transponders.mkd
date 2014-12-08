@@ -1,0 +1,35 @@
+# Transponders
+
+These are the currently active transponders:
+
+## Galaxy 19 97.0°W (North America)
+
+![G19 coverage map](../img/galaxy19_coverage.gif)
+
+Galaxy 19 covers North America (US and Canada).
+
+- Frequency: 12177000 Hz
+- Symbolrate: 23000000 bauds
+- FEC: 3/4
+- Polarization: Vertical
+
+## HotBird 13.0°E (Europe, North Africa)
+
+![HB13 coverage map](../img/hb13e_coverage.jpg)
+
+HotBird covers Europe and Northern parts of Africa.
+
+- Frequency: 11470000 Hz
+- Symbolrate: 27500000 baud
+- FEC: 5/6
+- Polarization: Vertical
+
+## Intelsat 20 68.5°E (Europe, Sub-Saharan Africa)
+
+![IS20 coverage map](../img/is20_coverage.jpg)
+
+- Frequency: 12522000 Hz
+- Symbolrate: 27500000 baud
+- FEC: 3/4
+- Polarization: Vertical
+

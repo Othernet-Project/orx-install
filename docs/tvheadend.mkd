@@ -1,0 +1,87 @@
+# Using TVHeadend
+
+Currently, TVHeadend that is installed during the ORx installation is the most
+reliable way to tune into the Outernet signal (that we know of).
+
+## Accessing TVHeadend
+
+TVHeadend can be found at your receiver's IP address on port 9981. For example,
+if your receiver is on 192.168.10.247, TVHeadend is found at
+192.168.10.247:9981. If you go to that address and TVHeadend is not loaded, you
+can try 192.168.10.247:9981/extjs.html.
+
+Since v0.1b2, Librarian provides a link to TVHeadend. Go to the dashboard and
+click the "Access TVHeadend" button.
+
+![TVHeadend: access button in Librarian](../img/05_tvheadend_button.png)
+
+## Adding the channel (transponder) automatically
+
+If you want to add muxes manually, you can find more information in the
+*Tuning in manually* section.
+
+![TVHeadend: choosing DVB interface](../img/00_tvheadend.png)
+
+Check the *Enabled* checkbox for your tuner, and click Save.
+
+![TVHeadend: enabling DVB interface](../img/01_enable.png)
+
+Click the *Add DVB Network by location...* button on the left and find your
+satellite.
+
+![TVHeadend: add network](../img/02_network.png)
+
+TVHeadend will start performing the initial scan to get the names of all
+channels. Give it a few minutes, then switch over to *Services* tab.
+
+## Adding the channel (transponder) manually
+
+To tune in manually, you must first know what
+[transponder](../docs/transponders.mkd) you need to use.
+
+Go to *Configuration* tab (at the top), then  *DVB Inputs*, then *TV Adapters*.
+Select your adaptor from the drop-down list, and then select the *Multiplexes*
+tab. In the tab, you can click on *Add mux(es) manually...* button.
+
+![muxes tabs](../img/06_mux01.png)
+
+In the form that opens, enter the data for your transponder.
+
+![transponder form](../img/07_mux02.png)
+
+For *Constellation*, you can use QPSK, and for *Delivery System* field, use
+`SYS_DVBS`. Make sure default satellite configuration is selected unless you
+know what you're doing. Click the *Add* button to finish. Note that the form
+will not automatically close, so close it manually when you are done.
+
+## Tuning in
+
+![TVHeadend: services](../img/03_map.png)
+
+Locate Outernet service from the list and click the *Map selected* button in 
+the toolbar above.
+
+Finally, click the *play* link next to the service name.
+
+Switch over to the *Status* tab at the top of the interface.
+
+![TVHeadend: status](../img/04_status.png)
+
+You should see signal strength there.
+
+After you have performed the above steps, Outernet Data Delivery agent should
+start receiving files.
+
+## Turning on idle scanning
+
+While not really a way to keep the tuner tuned-in, idle scanning does help in
+maintainig the tune most of the time. Idle scanning kicks in when the tuner is
+not tuned in. It will tune in to any transponders that have been added, so as
+long as you the only transponder you have is one of the Outernet's
+transponders, it will sort of maintain the tune.
+
+Go to *Configuration* tab (at the top), then *DVB Inputs*, then *TV ADapters*.
+Select your adaptor from the drop-down list, and then enable the *Idle
+scanning* option. Click *Save* to finalize the configuration.
+
+![TVHeadend: idle scanning setting](../img/08_mux03.png)
