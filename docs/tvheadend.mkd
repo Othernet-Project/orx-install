@@ -18,7 +18,8 @@ click the "Access TVHeadend" button.
 ## Adding the channel (transponder) automatically
 
 If you want to add muxes manually, you can find more information in the
-*Tuning in manually* section.
+*Tuning in manually* section. Adding muxes manually is also required for
+satellites that are not in TVHeadend configuration.
 
 ![TVHeadend: choosing DVB interface](../img/00_tvheadend.png)
 
