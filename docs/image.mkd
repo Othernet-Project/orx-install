@@ -1,0 +1,55 @@
+# Using ORx image files
+
+For this method, you will need an 8GB SD card. Smaller cards will be supported
+in future. Please note that the image files are currenly provided for testing
+purposes, and they may not work correctly.
+
+## Obtaining the image file
+
+Obtain an image file of your choice from 
+[archive.outernet.is/images](http://archive.outernet.is/images/). There are
+currently two images:
+
+ - [Arch ARM](http://archive.outernet.is/images/ORx-ArchLinuxARM-20141208.7z)
+ - [Raspbian](http://archive.outernet.is/images/ORx-Raspbian-20141208.7z)
+
+## Unpacking and burning the image
+
+You will need to unpack the 7zip archive and copy the image onto an SD card
+using an image writer program. You will also need 10GB of free disk space (2GB
+for 7zip archive, and 8GB more for the actual image file).
+
+### Windows
+
+You can use the official [7zip program](http://7-zip.org/download.html) and
+[Win32 disk imager](http://sourceforge.net/projects/win32diskimager/) to write
+the image file.
+
+Right-click the 7zip archive, and select *7-Zip* context menu, then 
+*Extract Here*. 
+
+Once extracted, you can write the image file by opening Win32 disk imager,
+selecting the image file, selecting the drive which holds your SD card, and
+clicking *Write*.
+
+### Linux
+
+In most Linux distribution, there should be a p7zip command line tool. In some
+cases, your file manager may support unpacking 7zip archives so explore that
+option if you don't want to use the command line. From command line, you can
+unpack the archive like this:
+
+    p7zip -d /path/to/ORx-image-file.7zip
+
+Most Linux distributions come with `dd`, which is a command line tool for
+writing image files. This command is used like this:
+
+    dd if=/path/to/ORx-image-file.img of=/dev/sdX bs=4
+
+You may get a warning that the target drive is out of space, but this should
+generally not be a problem unless your card is *significantly* smaller than the
+image file. We will fix this issue in future, with smaller image files.
+
+### Mac
+
+TODO

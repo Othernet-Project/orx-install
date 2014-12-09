@@ -25,10 +25,7 @@ See *Transponders* section for information on where you should point your dish.
 
 ## Install using Outernet-provided image file
 
-For this method, you will need an 8GB SD card. Smaller cards will be supported
-in future.
-
-TODO
+Please see [image.mkd](../docs/image.mkd) for more information.
 
 ## Install using ORx scripts
 
