@@ -21,7 +21,7 @@ You will need the following:
 
 ## Point the dish
 
-See *Transponders* section for information on where you should point your dish.
+See [*Transponders* document](../docs/transponders.mkd) for information on where you should point your dish.
 
 ## Install using Outernet-provided image file
 
