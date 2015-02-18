@@ -19,7 +19,7 @@ Galaxy 19 covers North America (US and Canada).
 
 HotBird covers Europe and Northern parts of Africa.
 
-- Frequency: 11470000 Hz
+- Frequency: 11471000 Hz
 - Symbolrate: 27500000 baud
 - FEC: 5/6
 - Polarization: Vertical
