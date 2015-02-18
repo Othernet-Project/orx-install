@@ -68,6 +68,8 @@ Cause is still undetermined.
 
 TODO: How to tell the difference before buying?
 
+## Transponders
+
 For information about the transponders please see [transponders.mkd](./docs/transponders.mkd)
 
 ## Reporting bugs
