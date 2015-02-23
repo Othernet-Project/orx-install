@@ -72,12 +72,12 @@ TODO: How to tell the difference before buying?
 
 For information about the transponders please see [transponders.mkd](./docs/transponders.mkd)
 
-## Reporting bugs
+## Reporting bugs, feature requests, and discussion
 
 Please use the [GitHub issue
 tracker](https://github.com/Outernet-Project/orx-install/issues) to report
 issues and feature requests. For general discussions, post in [our
-forum](https://discuss.outernet.is/category/outernet-software).
+forum](https://discuss.outernet.is/category/outernet-software) or join us on [chat](https://gitter.im/Outernet-Project/orx-install).
 
 ## License
 
@@ -95,6 +95,3 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ONDD (Outernet Data Delivery agent) installed by these scripts is distributed 
 under separate license.
-
-
-Join the chat at https://gitter.im/Outernet-Project/orx-install
