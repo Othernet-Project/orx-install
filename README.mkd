@@ -96,3 +96,5 @@ this program.  If not, see <http://www.gnu.org/licenses/>.
 ONDD (Outernet Data Delivery agent) installed by these scripts is distributed 
 under separate license.
 
+
+Join the chat at https://gitter.im/Outernet-Project/orx-install
