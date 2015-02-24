@@ -159,7 +159,7 @@ open the configuration file `/etc/network/interfaces` in nano. If you would
 like to use another editor, set the `EDITOR` environment variable to the
 command that opens your editor of choice. For example, to use vi:
 
-    EDITOR=vi bash setap-CHIPSET.sh
+    EDITOR=vi bash setap.sh
 
 Network configuration for Raspbian should generally be:
 
