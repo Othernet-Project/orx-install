@@ -37,8 +37,7 @@ Please read the `README.mkd` files in each of the distribution directories.
 ## Known issues
 
 The following usses are confirmed and bug reports have already been filed. Also
-look at the [issue
-tracker](https://github.com/Outernet-Project/orx-install/issues) for more
+look at the [issue tracker](https://github.com/Outernet-Project/orx-install/issues) for more
 information.
 
 ### PCTV 461e not appearing in TVHeadend on Raspberry Pi model B+
