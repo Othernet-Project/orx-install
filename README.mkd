@@ -10,10 +10,13 @@ home-made device.
 
 ## Supported devices and configurations
 
+Please take note Raspberry Pi v1 is the only version supported at this time.
+The v2 has an ARM v7 processor, which is UNSUPPORTED.
+
 The following distributions are supported by the scripts in this repository:
 
-- [Raspbian](raspbian) (Raspberry Pi, ARM v6)
-- [Arch Linux ARM](archarm) (Raspberry Pi, ARM v6)
+- [Raspbian](raspbian) (Raspberry Pi v1, ARM v6)
+- [Arch Linux ARM](archarm) (Raspberry Pi v1, ARM v6)
 
 Following DVB-S/S2 tuners have been tested with above systems:
 
