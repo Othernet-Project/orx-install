@@ -10,10 +10,13 @@ home-made device.
 
 ## Supported devices and configurations
 
+Please take note Raspberry Pi v1 is the only version supported at this time.
+The v2 has an ARM v7 processor, which is UNSUPPORTED.
+
 The following distributions are supported by the scripts in this repository:
 
-- [Raspbian](raspbian) (Raspberry Pi, ARM v6)
-- [Arch Linux ARM](archarm) (Raspberry Pi, ARM v6)
+- [Raspbian](raspbian) (Raspberry Pi v1, ARM v6)
+- [Arch Linux ARM](archarm) (Raspberry Pi v1, ARM v6)
 
 Following DVB-S/S2 tuners have been tested with above systems:
 
@@ -37,8 +40,7 @@ Please read the `README.mkd` files in each of the distribution directories.
 ## Known issues
 
 The following usses are confirmed and bug reports have already been filed. Also
-look at the [issue
-tracker](https://github.com/Outernet-Project/orx-install/issues) for more
+look at the [issue tracker](https://github.com/Outernet-Project/orx-install/issues) for more
 information.
 
 ### PCTV 461e not appearing in TVHeadend on Raspberry Pi model B+
@@ -70,17 +72,14 @@ TODO: How to tell the difference before buying?
 
 ## Transponders
 
-These are the currently active transponders:
+For information about the transponders please see [transponders.mkd](./docs/transponders.mkd)
 
-- North America: Galaxy 19 (97.0°W) 12,177 V 23,000 3/4
-- Europe: HotBird (13.0°E) 11,470 V 27,500 5/6
-
-## Reporting bugs
+## Reporting bugs, feature requests, and discussion
 
 Please use the [GitHub issue
 tracker](https://github.com/Outernet-Project/orx-install/issues) to report
 issues and feature requests. For general discussions, post in [our
-forum](https://discuss.outernet.is/category/outernet-software).
+forum](https://discuss.outernet.is/category/outernet-software) or join us on [chat](https://gitter.im/Outernet-Project/orx-install).
 
 ## License
 
