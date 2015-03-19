@@ -43,7 +43,7 @@ MODE=g
 CHANNEL=6
 SSID=outernet
 PSK=outernet
-HOSTAPDRV=nl80211
+HOSTAPDRV=rtl871xdrv  # not using 'nl80211'
 SUBNET=10.0.0
 IPADDR=${SUBNET}.1
 DNSADDR=$IPADDR  # Pi will be the DNS server as well
@@ -54,17 +54,6 @@ DHCP_END=10.0.0.254
 # Command aliases
 WGET="wget"
 EDIT=${EDITOR:-nano}
-
-# warn_and_die(message)
-#
-# Prints a big fat warning message and exits
-#
-warn_and_die() {
-    echo "=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*"
-    echo "$1"
-    echo "=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*"
-    exit 1
-}
 
 # fail()
 #
@@ -135,8 +124,8 @@ do_or_pass() {
 # Checks whether wireless interface supports "AP" mode. Returns $NO or $YES.
 #
 checkiw() {
-    iw list | grep -A 8 "Supported interface modes:" | grep "* AP" \
-        > /dev/null && echo $YES || echo $NO
+    iw list > /dev/null 2>&1 | grep "nl80211 not found"
+    [ $? == 0 ] && echo $NO || echo $YES
 }
 
 # backup()
@@ -173,7 +162,6 @@ echo "OK"
 # Install necessary packages
 section "Installing packages"
 do_or_fail apt-get update
-echo "DONE"
 DEBIAN_FRONTEND=noninteractive do_or_pass apt-get -y --force-yes install \
     iw hostapd isc-dhcp-server dsniff
 echo "DONE"
@@ -186,6 +174,20 @@ section "Wi-Fi interface with AP mode support"
 if [[ $(checkiw) == $NO ]]; then
     warn_and_die "Wireless interface does not support AP mode"
 fi
+echo "OK"
+
+###############################################################################
+# Patch Hostapd
+###############################################################################
+
+section "Downgrading hostapd binary"
+if ! [[ -e /usr/sbin/hostapd.raspbian ]]; then
+    do_or_fail cp /usr/sbin/hostapd /usr/sbin/hostapd.raspbian
+fi
+do_or_fail wget http://dl.dropbox.com/u/1663660/hostapd/hostapd > /dev/null 2>&1
+do_or_fail chown root:root hostapd
+do_or_fail chmod 755 hostapd
+do_or_fail mv hostapd /usr/sbin/hostapd
 echo "OK"
 
 ###############################################################################
@@ -234,17 +236,6 @@ if [[ "$editnow" == y ]] || [[ "$editnow" == Y ]]; then
         sed 's|^HOTPLUG_INTERFACES=".*"|HOTPLUG_INTERFACE=""|' > "$PLUGCFG"
 fi
 
-
-section "Checking network configuration"
-do_or_fail ifdown $WLAN
-sleep 2
-do_or_fail ifup $WLAN
-sleep 2
-# Final check
-ifconfig -a | tee -a "$LOG" | grep $WLAN -A 1 | grep "inet addr:$IPADDR" \
-    > /dev/null || fail
-echo "DONE"
-
 ###############################################################################
 # DHCP
 ###############################################################################
@@ -287,7 +278,8 @@ if ! [[ $(grep "interface=$WLAN" "$APCFG") ]]; then
     fi
     cat > "$APCFG" <<EOF
 interface=$WLAN
-driver=nl80211
+driver=$HOSTAPDRV
+ctrl_interface=$WLAN
 ssid=$SSID
 hw_mode=$MODE
 channel=$CHANNEL
@@ -295,11 +287,13 @@ wmm_enabled=1
 auth_algs=1
 macaddr_acl=0
 ignore_broadcast_ssid=0
-wpa=2
+beacon_int=100
+wpa=3
 wpa_passphrase=$PSK
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
 rsn_pairwise=CCMP
+eap_reauth_period=360000000
 EOF
 
     # Edit the DAEMON_CONF= line in /etc/defaults/hostapd and point it to our
@@ -412,6 +406,20 @@ esac
 :
 EOF
 chmod +x "$DSNIFF_INIT"
+echo "DONE"
+
+###############################################################################
+# Final network check
+###############################################################################
+
+section "Checking network configuration"
+do_or_fail ifdown $WLAN
+sleep 2
+do_or_fail ifup $WLAN
+sleep 2
+# Final check
+ifconfig -a | tee -a "$LOG" | grep $WLAN -A 1 | grep "inet addr:$IPADDR" \
+    > /dev/null || fail
 echo "DONE"
 
 ###############################################################################
