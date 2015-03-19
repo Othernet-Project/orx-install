@@ -351,3 +351,26 @@ footer {
   clear: both;
   background: #3b3b3b;
 }
+
+.hdstar {
+  background: #00a2db;
+  color: white;
+}
+
+.hdstar a {
+  color: white;
+  text-decoration: underline;
+}
+
+pre {
+  margin-bottom: 1em;
+  border: 1px solid white;
+  background: #212121;
+  color: white;
+  padding: 0.5em 1em;
+}
+
+code {
+  font-family: "Courier New", "Courier 10pt", Courier, monospace;
+  font-size: 90%;
+}
