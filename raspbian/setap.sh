@@ -31,6 +31,7 @@ DHCPCFG=/etc/dhcp/dhcpd.conf
 DHCPDFL=/etc/default/isc-dhcp-server
 APDFL=/etc/default/hostapd
 APCFG=/etc/hostapd/hostapd.conf
+APBIN=/usr/sbin/hostapd
 DNSCFG=/etc/dnsspoof.conf
 DHCP_INIT=/etc/init.d/udhcpd
 DSNIFF_INIT=/etc/init.d/dnsspoof
@@ -181,60 +182,32 @@ echo "OK"
 ###############################################################################
 
 section "Downgrading hostapd binary"
-if ! [[ -e /usr/sbin/hostapd.raspbian ]]; then
-    do_or_fail cp /usr/sbin/hostapd /usr/sbin/hostapd.raspbian
-fi
+backup $APBIN
 do_or_fail wget http://dl.dropbox.com/u/1663660/hostapd/hostapd > /dev/null 2>&1
 do_or_fail chown root:root hostapd
 do_or_fail chmod 755 hostapd
-do_or_fail mv hostapd /usr/sbin/hostapd
+do_or_fail mv hostapd $APBIN 
 echo "OK"
 
 ###############################################################################
 # Networking
 ###############################################################################
 
-cat <<EOF
+section "Network configuration"
+backup $NETCFG 
+cat > $NETCFG <<EOF
+auto lo
 
-If you ran this script before, the wireless interface 
-may already be configured correctly and you may safely 
-ignore this message and answer with 'N'.
+iface lo inet loopback
+iface eth0 inet dhcp
 
-Network configuration for $WLAN already exists in 
-'$NETCFG'. The correct configuration for $WLAN
-should look like this:
-
-    allow-hotplug $WLAN
-    iface $WLAN inet static
-     address $IPADDR
-     netmask $NETMASK
-
-Make sure the interface configuration for $WLAN contains 
-no 'wpa-conf' lines.
-
-You also want to set eth0 to 'auto' instead of 
-'allow-hotplug'.
+allow-hotplug ${WLAN}
+iface ${WLAN} inet static
+  address ${IPADDR}
+  netmask 255.255.255.0
 
 EOF
-read -p "Would you like to edit network configuration now? [y/N] " -n 1 editnow
-echo ""
-if [[ "$editnow" == y ]] || [[ "$editnow" == Y ]]; then
-    $EDIT "$NETCFG"
-fi
-
-cat <<EOF
-
-You probably also want to disable hotplugging for eth0 
-in '$PLUGCFG'.
-
-EOF
-read -p "Disable hotplugging for eth0? [y/N]" -n 1 editnow
-echo ""
-if [[ "$editnow" == y ]] || [[ "$editnow" == Y ]]; then
-    backup "$PLUGCFG"
-    cat "${PLUGCFG}.old" | \
-        sed 's|^HOTPLUG_INTERFACES=".*"|HOTPLUG_INTERFACE=""|' > "$PLUGCFG"
-fi
+echo "OK"
 
 ###############################################################################
 # DHCP
