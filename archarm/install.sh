@@ -25,6 +25,7 @@ RELEASE="0.1b3-1"
 ONDD_RELEASE="0.1.0-4"
 TVHE_RELEASE="3.4.27-2"
 BJOERN_RELEASE="1.4.2-1"
+SU3K_RELEASE="3.18.9-1"
 NAME=librarian
 ROOT=0
 OK=0
@@ -136,7 +137,7 @@ backup() {
     fi
 }
 
-# install_package(name, release, title)
+# install_package(name, release, title, arch)
 #
 # Installs binary package from Outernet's package URL
 #
@@ -144,11 +145,14 @@ install_package() {
     pkgname=$1
     pkgrel=$2
     pkgtitle=$3
+    arch=$4
+    : ${arch:=armv6h}
+    pkgfile="${pkgname}-${pkgrel}-${arch}.pkg.tar.xz"
     if ! pacman -Q "$pkgname" 1> /dev/null 2>> "$LOG"; then
         do_or_fail $WGET --directory-prefix "$TMPDIR" \
-            ${PKGS}/packages/${pkgname}-${pkgrel}-armv6h.pkg.tar.xz
-        do_or_fail pacman -U "$TMPDIR/${pkgname}-${pkgrel}-armv6h.pkg.tar.xz"
-        do_or_pass rm -f "$TMPDID/${pkgname}-${pkgrel}-armv6h.pkg.tar.xz"
+            "$PKGS/packages/$pkgfile"
+        do_or_fail $PACMAN -U "$TMPDIR/$pkgfile"
+        do_or_pass rm -f "$TMPDID/$pkgfile"
         echo "DONE"
     else
         echo "${pkgtitle} already installed." >> "$LOG"
@@ -228,11 +232,18 @@ echo "OK"
 # Packages
 ###############################################################################
 
-section "Installing packages"
+section "Updating package database"
 do_or_fail $PACMAN -Sqy
+echo "DONE"
+
+section "Upgrading system packages"
 do_or_fail $PACMAN -Squ
+echo "DONE"
+
+section "Installing packages"
 do_or_fail $PACMAN -Sq --needed python2 python2-pip git openssl avahi libev \
-    base-devel wget
+    base-devel wget python2-greenlet python2-gevent python2-six \
+    python2-babel python2-dateutil python2-pytz python2-bottle
 echo "DONE"
 
 ###############################################################################
@@ -249,33 +260,23 @@ done
 echo "DONE"
 
 ###############################################################################
-# ONDD
+# Custom packages
 ###############################################################################
+
+section "Installing SU3000 v3.0 (Geniatech HDStar) patched driver"
+install_package su3000v3 "$SU3K_RELEASE" "SU3000v3 driver"
 
 section "Installing Outernet Data Delivery agent v$ONDD_RELEASE"
 install_package ondd "$ONDD_RELEASE" ONDD
 
-###############################################################################
-# TVHeadend
-###############################################################################
-
 section "Installing TVHeadend v$TVHE_RELEASE"
-install_package tvheadend $TVHE_RELEASE TVHeadend
-
-###############################################################################
-# Librarian
-###############################################################################
-
-section "Installing Librarian dependencies"
-do_or_fail $PIP install python2-greenlet python2-gevent python2-six \
-    python2-babel python2-dateutil python2-pytz python2-bottle
-echo "DONE"
+install_package tvheadend "$TVHE_RELEASE" TVHeadend
 
 section "Installing Bjoern v$BJOERN_RELEASE"
-install_package python2-bjoern $BJOERN_RELEASE Bjoern
+install_package python2-bjoern "$BJOERN_RELEASE" Bjoern
 
 section "Installing Librarian v${RELEASE}"
-install_package python2-librarian $RELEASE Librarian
+install_package python2-librarian "$RELEASE" Librarian any
 
 ###############################################################################
 # System services
