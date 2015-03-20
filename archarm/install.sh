@@ -263,9 +263,6 @@ echo "DONE"
 # Custom packages
 ###############################################################################
 
-section "Installing SU3000 v3.0 (Geniatech HDStar) patched driver"
-install_package su3000v3 "$SU3K_RELEASE" "SU3000v3 driver"
-
 section "Installing Outernet Data Delivery agent v$ONDD_RELEASE"
 install_package ondd "$ONDD_RELEASE" ONDD
 
