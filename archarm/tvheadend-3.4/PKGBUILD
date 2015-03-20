@@ -1,0 +1,46 @@
+# Maintainer: artful.tiger
+# Fork maintainer: Outernet Inc <branko@outernet.is>
+pkgname=tvheadend-3.4
+_gitname='tvheadend'
+pkgver=3.4patch1
+pkgrel=1
+pkgdesc="TV streaming server for Linux"
+arch=('i686' 'x86_64' 'armv6h')
+url="https://tvheadend.org/projects/tvheadend"
+license=('GPL3')
+depends=('avahi' 'openssl' 'python2')
+makedepends=('git')
+optdepends=('xmltv: For an alternative source of programme listings')
+provides=('tvheadend')
+conflicts=('tvheadend' 'hts-tvheadend' 'hts-tvheadend-svn' 'hts-tvheadend-git' 'tvheadend-git')
+backup=('etc/conf.d/tvheadend')
+install=tvheadend.install
+
+source=("$_gitname::git://github.com/tvheadend/tvheadend.git" 'tvheadend.service')
+
+md5sums=('SKIP' 'b546f4486f0d28bea13ad1fb676acb27')
+
+
+init_build(){
+    msg "Creating build directory"
+    cd ${srcdir}
+    [ -d ${_gitname}-build ] && rm -rf ${_gitname}-build
+    /usr/share/git/workdir/git-new-workdir ${_gitname} ${_gitname}-build release/3.4
+}
+
+build() {
+   init_build
+
+    msg "Starting make..."
+    cd ${srcdir}
+    cd ${_gitname}-build
+    ./configure --prefix=/usr --mandir=/usr/share/man/man1 --python=python2 --release
+    make
+}
+
+package() {
+    cd ${srcdir}
+    cd ${_gitname}-build
+    make DESTDIR="$pkgdir/" install
+    install -D -m 644 "$srcdir/tvheadend.service" "$pkgdir/usr/lib/systemd/system/tvheadend.service"
+}
