@@ -3,7 +3,7 @@ Description=Librarian service
 After=network.target
 
 [Service]
-ExecStart=python2 -m librarian.app
+ExecStart=/usr/bin/python2.7 -m 'librarian.app'
 Restart=always
 RestartSec=5
 

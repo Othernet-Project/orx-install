@@ -10,7 +10,7 @@ license=('GPL')
 depends=('python2' 'python2-gevent' 'python2-bjoern' 'python2-babel' 'python2-dateutil')
 makedepends=('python2-setuptools' 'gettext')
 source=("http://outernet-project.github.io/orx-install/src/${name}-${pkgver}.tar.gz" "${name}.service")
-md5sums=(7b810e0272116201cc3acfc812755c8b 5f00e858d57bbe75280cb12317950d25)
+md5sums=(7b810e0272116201cc3acfc812755c8b 4091e52b0e6bc0e7afa1cde6a3fc1ba6)
 
 package() {
   mkdir -p "$pkgdir/etc/systemd/system"
