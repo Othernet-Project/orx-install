@@ -1,4 +1,7 @@
 # Maintainer: Outernet Inc <branko@outernet.is>
+KERNEL="$(uname -r)"
+OUTDIR="usr/lib/modules/$KERNEL/kernel/drivers/media"
+
 pkgname=su3000v3
 pkgver=3.18.9
 pkgrel=1
@@ -6,16 +9,23 @@ pkgdesc="Patched drivers for SU3000 v3.0 (Geniatech HDStar)"
 arch=(armv6h)
 url="http://outernet-project.github.io/orx-install/"
 license=('custom')
-depends=('linux-raspberrypi>=3.18.9-1' 'linux-raspberrypi<3.18.10')
+depends=('linux-raspberrypi=3.18.9-2')
 source=("http://outernet-project.github.io/orx-install/misc/geniatech_hdstar_modules.tar.gz")
 noextract=()
 md5sums=(acebb18ce793e93cf4921141b0a3313e)
 
+
 build() {
   tar xvf geniatech_hdstar_modules.tar.gz
+  mv lib/modules/3.18.9+/kernel/drivers/media/{dvb-frontends/ds3000.ko,usb/dvb-usb/dvb-usb-dw2102.ko} .
+  rm -rf lib
+  gzip ds3000.ko
+  gzip dvb-usb-dw2102.ko
 }
 
 package() {
-  mkdir -p "$pkgdir/usr"
-  mv lib "$pkgdir/usr"
+  ls
+  mkdir -p "$pkgdir/$OUTDIR/"{dvb-frontends,usb/dvb-usb}
+  install -m644 ds3000.ko.gz "$pkgdir/$OUTDIR/dvb-frontends/ds3000.ko.gz"
+  install -m644 dvb-usb-dw2102.ko.gz "$pkgdir/$OUTDIR/usb/dvb-usb/dvb-usb-dw2102.ko.gz"
 }
