@@ -23,6 +23,7 @@ set -e
 # Constants
 RELEASE=0.1b3
 ONDD_RELEASE="0.1.0-3"
+TVHE_RELEASE="3.4.27-2"
 NAME=librarian
 ROOT=0
 OK=0
@@ -209,9 +210,8 @@ echo "OK"
 section "Installing packages"
 do_or_fail $PACMAN -Sqy
 do_or_fail $PACMAN -Squ
-do_or_pass $PACMAN -R linux-raspberrypi
 do_or_fail $PACMAN -Sq --needed python2 python2-pip git openssl avahi libev \
-    base-devel wget linux-raspberrypi-latest linux-raspberrypi-latest-headers
+    base-devel wget
 echo "DONE"
 
 ###############################################################################
@@ -240,6 +240,21 @@ if ! pacman -Q ondd 2>> "$LOG" | grep "$ONDD_RELEASE" > /dev/null;then
     echo "DONE"
 else
     echo "ONDD already installed." >> "$LOG"
+    echo "SKIPPED"
+fi
+
+###############################################################################
+# TVHeadend
+###############################################################################
+
+section "Installing TVHeadend $TVHE_RELEASE"
+if ! pacman -Q tvheadend 1> /dev/null 2>> "$LOG"; then
+    do_or_fail $WGET --directory-prefix "$TMPDIR" \
+        ${PKGS}/packages/tvheadend-${TVHE_RELEASE}-armv6h.pkg.tar.xz
+    do_or_fail pacman -U "$TMPDIR/tvheadend-${TVHE_RELEASE}-armv6h.pkg.tar.xz"
+    do_or_pass rm -f "$TMPDID/tvheadend-${TVHE_RELEASE}-armv6h.pkg.tar.xz"
+else
+    echo "TVHeadend already installed." >> "$LOG"
     echo "SKIPPED"
 fi
 
@@ -277,26 +292,6 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 echo "DONE"
-
-###############################################################################
-# TVHeadend
-###############################################################################
-
-section "Installing TVHeadend from AUR"
-if ! pacman -Q tvheadend 1> /dev/null 2>> "$LOG"; then
-    do_or_fail $WGET --directory-prefix "$TMPDIR" \
-        https://aur.archlinux.org/packages/tv/tvheadend/tvheadend.tar.gz
-    do_or_fail $UNPACK "$TMPDIR/tvheadend.tar.gz"
-    do_or_fail rm "$TMPDIR/tvheadend.tar.gz"
-    cd tvheadend
-    do_or_fail $MAKEPKG --asroot -i
-    cd ..
-    do_or_fail rm -rf tvheadend
-    echo "DONE"
-else
-    echo "TVHeadend already installed." >> "$LOG"
-    echo "SKIPPED"
-fi
 
 ###############################################################################
 # System services
