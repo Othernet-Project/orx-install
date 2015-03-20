@@ -8,7 +8,7 @@ arch=(any)
 url="https://github.com/Outernet-Project/librarian"
 license=('GPL')
 depends=('python2' 'python2-gevent' 'python2-bjoern' 'python2-babel' 'python2-dateutil')
-makedepends=('python2-setuptools')
+makedepends=('python2-setuptools' 'gettext')
 source=("http://outernet-project.github.io/orx-install/src/${name}-${pkgver}.tar.gz" "${name}.service")
 md5sums=(7b810e0272116201cc3acfc812755c8b 412ce5f4a0afe13c0fc0925a5eeafee0)
 
