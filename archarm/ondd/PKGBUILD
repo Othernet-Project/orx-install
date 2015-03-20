@@ -6,17 +6,6 @@ pkgdesc="Outernet Data Delivery agent binary"
 arch=(armv6h)
 url="http://outernet-project.github.io/orx-install/"
 license=('custom')
-groups=()
-depends=()
-makedepends=()
-optdepends=()
-provides=()
-conflicts=()
-replaces=()
-backup=()
-options=()
-install=
-changelog=
 source=(
 http://outernet-project.github.io/orx-install/debs/${pkgname}_${pkgver}-0_armhf.deb
 ondd.service
