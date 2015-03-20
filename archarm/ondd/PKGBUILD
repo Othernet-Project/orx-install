@@ -1,7 +1,7 @@
 # Maintainer: Outernet Inc <branko@outernet.is>
 pkgname=ondd
 pkgver=0.1.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Outernet Data Delivery agent binary"
 arch=(armv6h)
 url="http://outernet-project.github.io/orx-install/"
@@ -32,8 +32,8 @@ build() {
 }
 
 package() {
-  mkdir -p "$pkgdir/usr/sbin"
+  mkdir -p "$pkgdir/usr/bin"
   mkdir -p "$pkgdir/etc/systemd/system"
-  install -m755 usr/sbin/ondd "$pkgdir/usr/sbin"
+  install -m755 usr/sbin/ondd "$pkgdir/usr/bin/ondd"
   install -m644 ondd.service "$pkgdir/etc/systemd/system"
 }
