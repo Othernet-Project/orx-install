@@ -1,0 +1,21 @@
+# Maintainer: Outernet Inc <branko@outernet.is>
+pkgname=su3000v3
+pkgver=3.18.9
+pkgrel=1
+pkgdesc="Patched drivers for SU3000 v3.0 (Geniatech HDStar)"
+arch=(armv6h)
+url="http://outernet-project.github.io/orx-install/"
+license=('custom')
+depends=('linux-raspberrypi>=3.18.9-1' 'linux-raspberrypi<3.18.10')
+source=("http://outernet-project.github.io/orx-install/misc/geniatech_hdstar_modules.tar.gz")
+noextract=()
+md5sums=(acebb18ce793e93cf4921141b0a3313e)
+
+build() {
+  tar xvf geniatech_hdstar_modules.tar.gz
+}
+
+package() {
+  mkdir -p "$pkgdir/usr"
+  mv lib "$pkgdir/usr"
+}
