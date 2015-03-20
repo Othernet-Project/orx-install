@@ -22,7 +22,7 @@ set -e
 
 # Constants
 RELEASE=0.1b3
-ONDD_RELEASE="0.1.0-3"
+ONDD_RELEASE="0.1.0-4"
 TVHE_RELEASE="3.4.27-2"
 NAME=librarian
 ROOT=0
@@ -231,10 +231,10 @@ echo "DONE"
 # ONDD
 ###############################################################################
 
-section "Installing Outernet Data Delivery agent"
+section "Installing Outernet Data Delivery agent v$ONDD_RELEASE"
 if ! pacman -Q ondd 2>> "$LOG" | grep "$ONDD_RELEASE" > /dev/null;then
     do_or_fail $WGET --directory-prefix "$TMPDIR" \
-        "${PKGS}/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
+        "${PKGS}/packages/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
     do_or_fail $PACMAN -U "$TMPDIR/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
     do_or_pass rm -f "$TMPDIR/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
     echo "DONE"
@@ -247,7 +247,7 @@ fi
 # TVHeadend
 ###############################################################################
 
-section "Installing TVHeadend $TVHE_RELEASE"
+section "Installing TVHeadend v$TVHE_RELEASE"
 if ! pacman -Q tvheadend 1> /dev/null 2>> "$LOG"; then
     do_or_fail $WGET --directory-prefix "$TMPDIR" \
         ${PKGS}/packages/tvheadend-${TVHE_RELEASE}-armv6h.pkg.tar.xz
@@ -262,11 +262,11 @@ fi
 # Librarian
 ###############################################################################
 
-section "Installing Librarian"
+section "Installing Librarian v${RELEASE}"
 if [ -f "$NAME-${RELEASE}.tar.gz" ]; then
     do_or_pass $PIP install "$NAME-${RELEASE}.tar.gz"
 else
-    do_or_pass $PIP install "$PKGS/$NAME-${RELEASE}.tar.gz"
+    do_or_pass $PIP install "$PKGS/src/$NAME-${RELEASE}.tar.gz"
 fi
 # Verify install was successful
 do_or_fail $PYTHON -c "import librarian"
