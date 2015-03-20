@@ -21,9 +21,10 @@
 set -e
 
 # Constants
-RELEASE=0.1b3
+RELEASE="0.1b3-1"
 ONDD_RELEASE="0.1.0-4"
 TVHE_RELEASE="3.4.27-2"
+BJOERN_RELEASE="1.4.2-1"
 NAME=librarian
 ROOT=0
 OK=0
@@ -135,6 +136,26 @@ backup() {
     fi
 }
 
+# install_package(name, release, title)
+#
+# Installs binary package from Outernet's package URL
+#
+install_package() {
+    pkgname=$1
+    pkgrel=$2
+    pkgtitle=$3
+    if ! pacman -Q "$pkgname" 1> /dev/null 2>> "$LOG"; then
+        do_or_fail $WGET --directory-prefix "$TMPDIR" \
+            ${PKGS}/packages/${pkgname}-${pkgrel}-armv6h.pkg.tar.xz
+        do_or_fail pacman -U "$TMPDIR/${pkgname}-${pkgrel}-armv6h.pkg.tar.xz"
+        do_or_pass rm -f "$TMPDID/${pkgname}-${pkgrel}-armv6h.pkg.tar.xz"
+        echo "DONE"
+    else
+        echo "${pkgtitle} already installed." >> "$LOG"
+        echo "SKIPPED"
+    fi
+}
+
 # ensure_service(name)
 #
 # Ensure that service is enabled and started. It enables services only if not 
@@ -232,66 +253,29 @@ echo "DONE"
 ###############################################################################
 
 section "Installing Outernet Data Delivery agent v$ONDD_RELEASE"
-if ! pacman -Q ondd 2>> "$LOG" | grep "$ONDD_RELEASE" > /dev/null;then
-    do_or_fail $WGET --directory-prefix "$TMPDIR" \
-        "${PKGS}/packages/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
-    do_or_fail $PACMAN -U "$TMPDIR/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
-    do_or_pass rm -f "$TMPDIR/ondd-${ONDD_RELEASE}-armv6h.pkg.tar.xz"
-    echo "DONE"
-else
-    echo "ONDD already installed." >> "$LOG"
-    echo "SKIPPED"
-fi
+install_package ondd "$ONDD_RELEASE" ONDD
 
 ###############################################################################
 # TVHeadend
 ###############################################################################
 
 section "Installing TVHeadend v$TVHE_RELEASE"
-if ! pacman -Q tvheadend 1> /dev/null 2>> "$LOG"; then
-    do_or_fail $WGET --directory-prefix "$TMPDIR" \
-        ${PKGS}/packages/tvheadend-${TVHE_RELEASE}-armv6h.pkg.tar.xz
-    do_or_fail pacman -U "$TMPDIR/tvheadend-${TVHE_RELEASE}-armv6h.pkg.tar.xz"
-    do_or_pass rm -f "$TMPDID/tvheadend-${TVHE_RELEASE}-armv6h.pkg.tar.xz"
-else
-    echo "TVHeadend already installed." >> "$LOG"
-    echo "SKIPPED"
-fi
+install_package tvheadend $TVHE_RELEASE TVHeadend
 
 ###############################################################################
 # Librarian
 ###############################################################################
 
+section "Installing Librarian dependencies"
+do_or_fail $PIP install python2-greenlet python2-gevent python2-six \
+    python2-babel python2-dateutil python2-pytz python2-bottle
+echo "DONE"
+
+section "Installing Bjoern v$BJOERN_RELEASE"
+install_package python2-bjoern $BJOERN_RELEASE Bjoern
+
 section "Installing Librarian v${RELEASE}"
-if [ -f "$NAME-${RELEASE}.tar.gz" ]; then
-    do_or_pass $PIP install "$NAME-${RELEASE}.tar.gz"
-else
-    do_or_pass $PIP install "$PKGS/src/$NAME-${RELEASE}.tar.gz"
-fi
-# Verify install was successful
-do_or_fail $PYTHON -c "import librarian"
-echo "DONE"
-
-section "Creating necessary directories"
-do_or_fail $MKD "$SPOOLDIR"
-do_or_fail $MKD "$SRVDIR"
-echo "DONE"
-
-section "Creating $NAME systemd unit"
-cat > "/etc/systemd/system/${NAME}.service" <<EOF
-[Unit]
-Description=$NAME service
-After=network.target
-
-[Service]
-ExecStart=$PYTHON -m '${NAME}.app'
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-EOF
-echo "DONE"
+install_package python2-librarian $RELEASE Librarian
 
 ###############################################################################
 # System services
