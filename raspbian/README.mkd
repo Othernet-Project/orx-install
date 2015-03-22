@@ -190,14 +190,13 @@ access point, the SSID and password, and so on.
 ## Supported USB DVB-S/S2 tuners
 
 - PCTV 460e
-- PCTV 461e (requires kernel newer than v3.14)
-- Geniatech HDStar TV box (only gen2 model)
+- PCTV 461e (requires kernel v3.18.9 or newer)
+- Geniatech HDStar TV box
 
 Please report any working devices that are not included in this list.
 
 ## Supported USB Wi-Fi dongles
 
-- TP-Link TL-WN722N (Atheros)
 - Edimax EW-7811UN (Realtek)
 
 ## Transponders
