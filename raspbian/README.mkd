@@ -23,13 +23,13 @@ You will need the following:
 
 See [*Transponders* document](../docs/transponders.mkd) for information on where you should point your dish.
 
-## Install using Outernet-provided image file
+## Option 1 - Install using Outernet-provided image file
 
 This section uses an image file we've built from arch or raspbian, your choice. 
 For users interested in simply flashing an sd card and going, this is worth a look.
 Please see [image.mkd](../docs/image.mkd) for more information.
 
-## Install using ORx scripts
+## Option 2 - Install using ORx scripts
 
 This method uses normal procedure for installing an operating system on your
 Raspberry Pi, and then uses scripts to convert the system into Outernet
