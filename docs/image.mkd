@@ -12,6 +12,8 @@ currently two images:
 
  - [Arch ARM](http://archive.outernet.is/images/ORx-ArchLinuxARM-20141208.7z)
  - [Raspbian](http://archive.outernet.is/images/ORx-Raspbian-20150319-AP.7z) (also available [no WiFi access point](http://archive.outernet.is/images/ORx-Raspbian-20150319.7z))
+ 
+ Latest is [Raspbian-ap](http://archive.outernet.is/images/ORx-Raspbian-20150319-AP.7z) (1.5GB expanded)
 
 ## Unpacking and burning the image
 
