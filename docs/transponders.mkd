@@ -33,7 +33,7 @@ HotBird covers Europe and Northern parts of Africa.
 - FEC: 3/4
 - Polarization: Vertical
 
-## AsiaSat 5 C-band
+## AsiaSat 5 C-band 100.5E (Asia)
 
 ![AS5 coverage map](../img/as5_coverage.jpg)
 
