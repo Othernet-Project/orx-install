@@ -33,6 +33,15 @@ HotBird covers Europe and Northern parts of Africa.
 - FEC: 3/4
 - Polarization: Vertical
 
+## AsiaSat 5 C-band
+
+![AS5 coverage map](../img/as5_coverage.jpg)
+
+- Frequency: 3960000 kHz
+- Symbolrate: 30000000 baud
+- FEC: 5/6
+- Polarization: Horizontal
+
 ## Intelsat 10 47.5°E (Europe, Africa)
 
 ![IS10 coverage map](../img/is10_coverage.jpg)
@@ -43,3 +52,4 @@ HotBird covers Europe and Northern parts of Africa.
 - Symbolrage: 10112000 baud
 - FEC: 1/2
 - Polarization: Vertical
+
