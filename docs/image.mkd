@@ -63,7 +63,7 @@ Next, we need to aquire 7zip. The easiest way is to start with hombrew, which ca
 
 It should work by default; if not, full installation instructions can be found here:
 
-    https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Installation.md
+ [homebrew installation](https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Installation.md)
 
 Once homebrew is installed you may download p7zip like this:
 
