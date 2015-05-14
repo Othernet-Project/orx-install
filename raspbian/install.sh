@@ -235,7 +235,7 @@ echo "DONE"
 
 section "Installing Outernet Data Delivery agent"
 do_or_fail wget --directory-prefix "$TMPDIR" \
-    "$PKGS/ondd_${ONDD_RELEASE}_armhf.deb"
+    "$PKGS/debs/ondd_${ONDD_RELEASE}_armhf.deb"
 do_or_fail dpkg -i "$TMPDIR/ondd_${ONDD_RELEASE}_armhf.deb"
 do_or_pass rm "$TMPDIR/ondd_${ONDD_RELEASE}_armhf.deb"
 echo "DONE"
@@ -248,7 +248,7 @@ section "Installing Librarian"
 if [ -f "$NAME-${RELEASE}.tar.gz" ]; then
     do_or_pass $PIP install "$NAME-${RELEASE}.tar.gz"
 else
-    do_or_pass $PIP install "$PKGS/$NAME-${RELEASE}.tar.gz"
+    do_or_pass $PIP install "$PKGS/src/$NAME-${RELEASE}.tar.gz"
 fi
 # Verify install was successful
 do_or_fail $PYTHON -c "import librarian"
