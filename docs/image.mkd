@@ -53,5 +53,46 @@ generally not be a problem unless your card is *significantly* smaller than the
 image file. We will fix this issue in future, with smaller image files.
 
 ### Mac
+First, if you do not already have xcode command-line tools installed, then type this in a terminal:
 
-TODO
+    xcode-select --install
+ 
+Next, we need to aquire 7zip. The easiest way is to start with hombrew, which can be installed by opening a terminal and typing:
+
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+It should work by default; if not, full installation instructions can be found here:
+
+ [homebrew installation](https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Installation.md)
+
+Once homebrew is installed you may download p7zip like this:
+
+    brew install p7zip
+
+Of course, you could always install it manually and can find the documentation to here:
+
+[p7zip](http://p7zip.sourceforge.net/)
+
+Now directions are the same as for Linux distributions. Mac OS X already comes with 'dd' installed by default. Type the following:
+
+    p7zip -d /path/to/ORx-image-file.7zip
+ 
+ To find which disk you would want to copy the image file to run the command:
+ 
+    disktutil list
+ 
+ Output will look similiar to this:
+ 
+    /dev/disk0
+    #: TYPE NAME SIZE IDENTIFIER
+    0: GUID_partition_scheme *500.1 GB disk0
+    1: EFI EFI 209.7 MB disk0s1
+    2: Microsoft Basic Data 25.1 GB disk0s2
+
+The far right of the output contains what you put after /dev/*.
+
+    dd if=/path/to/ORx-image-file.img of=/dev/diskXsY bs=4
+ 
+You may get a warning that the target drive is out of space, but this should
+generally not be a problem unless your card is *significantly* smaller than the
+image file. We will fix this issue in future, with smaller image files.
