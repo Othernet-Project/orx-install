@@ -6,50 +6,69 @@ These are the currently active transponders:
 
 ![G19 coverage map](../img/galaxy19_coverage.gif)
 
-Galaxy 19 covers North America (US and Canada).
-
-- Frequency: 12177000 kHz
-- Symbolrate: 23000000 bauds
-- FEC: 3/4
+- Frequency: 12,177 MHz
+- Symbolrate: 23,000 kbaud
 - Polarization: Vertical
+- Delivery: DVB-S
+- Constellation: QPSK
 
 ## HotBird 13.0°E (Europe, North Africa)
 
 ![HB13 coverage map](../img/hb13e_coverage.jpg)
 
-HotBird covers Europe and Northern parts of Africa.
-
-- Frequency: 11471000 kHz
-- Symbolrate: 27500000 baud
-- FEC: 5/6
+- Frequency: 11,471 MHz
+- Symbolrate: 27,500 kbaud
 - Polarization: Vertical
+- Delivery: DVB-S
+- Constellation: QPSK
 
 ## Intelsat 20 68.5°E (Europe, Sub-Saharan Africa)
 
 ![IS20 coverage map](../img/is20_coverage.jpg)
 
-- Frequency: 12522000 kHz
-- Symbolrate: 27500000 baud
-- FEC: 3/4
+- Frequency: 12,522 MHz
+- Symbolrate: 27,500 kbaud
 - Polarization: Vertical
+- Delivery: DVB-S
+- Constellation: QPSK
 
 ## AsiaSat 5 C-band 100.5E (Asia)
 
 ![AS5 coverage map](../img/as5_coverage.jpg)
 
-- Frequency: 3960000 kHz
-- Symbolrate: 30000000 baud
-- FEC: 5/6
+- Frequency: 3,960 MHz
+- Symbolrate: 30,000 kbaud
 - Polarization: Horizontal
+- Delivery: DVB-S
+- Constellation: QPSK
+
+## Eutelsat 113.0W (South, Middle, and North Americas)
+
+![Eutelsat 113W coverage map](../img/es113w_coverage.png)
+
+- Frequency: 12,089 MHz
+- Symbolrate: 11,719 kbaud
+- Polarization: Horizontal
+- Delivery: DVB-S
+- Constellation: QPSK
+
+## ABS-2 74.9E (South Asia)
+
+![ABS-2 coverage map](../img/abs2_coverage.jpg)
+
+- Frequency: 11,734MHz
+- Symborate: 44,000 kbaud
+- Polarization: Horizontal
+- Delivery: DVB-S
+- Constellation: QPSK
 
 ## Intelsat 10 47.5°E (Europe, Africa)
 
 ![IS10 coverage map](../img/is10_coverage.jpg)
 
-**This is an experimental signal.**
-
-- Frequency: 12602000 kHz
-- Symbolrage: 10112000 baud
-- FEC: 1/2
+- Frequency: 12,602 kHz
+- Symbolrage: 10,112 baud
 - Polarization: Vertical
+- Delivery: DVB-S2
+- Constellation: QPSK
 
