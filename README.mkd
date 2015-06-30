@@ -1,6 +1,6 @@
 **This repository is is no longer maintained. Please see
-[ORxPi](https://github.com/Outernet-Project/orx-rpi) for the new way of
-building your own receiver.**
+[ORxPi](https://github.com/Outernet-Project/orx-rpi#orx-build-for-raspbery-pi)
+for the new way of building your own receiver.**
 
 # ORx install scripts
 
