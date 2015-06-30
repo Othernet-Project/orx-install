@@ -1,3 +1,7 @@
+**This repository is is no longer maintained. Please see
+[ORxPi](https://github.com/Outernet-Project/orx-rpi) for the new way of
+building your own receiver.**
+
 # ORx install scripts
 
 This repository contains a collection of scripts for setting up devices for
